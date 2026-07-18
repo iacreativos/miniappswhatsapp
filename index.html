@@ -339,8 +339,8 @@ h1,h2,h3,h4,.font-display{font-family:'Poppins',sans-serif}
    ========================================================= */
 const CLINIC = {
   name: "Vitalis Dental",
-  whatsapp: "573001234567",              // número con indicativo de país, sin + ni espacios
-  phone: "+573001234567",
+  whatsapp: "573116221756",              // número con indicativo de país, sin + ni espacios
+  phone: "+573116221756",
   address: "Cra. 8 # 12-45, Centro, Ipiales, Nariño",
   lat: 0.8290, lng: -77.6415,            // coordenadas del consultorio para Maps / Waze
 };
@@ -350,12 +350,12 @@ const CLINIC = {
 // 'proximamente'   -> se muestra con la etiqueta PRÓXIMAMENTE, no se puede agendar todavía
 // 'no_disponible'  -> se muestra con la etiqueta NO DISPONIBLE, el consultorio dejó de ofrecerlo por ahora
 const SERVICES = [
-  {id:1, name:"Limpieza dental", desc:"Previene caries y mantiene tu boca sana.", price:120000, duration:45, status:'activo', img:"https://placehold.co/200x200/dbeafe/1e40af?text=Limpieza"},
-  {id:2, name:"Blanqueamiento dental", desc:"Dientes más blancos en una sola sesión.", price:250000, duration:60, status:'activo', img:"https://placehold.co/200x200/fef3c7/92400e?text=Blanqueamiento"},
-  {id:3, name:"Ortodoncia (control)", desc:"Alinea tus dientes y mejora tu sonrisa.", price:90000, duration:30, status:'activo', img:"https://placehold.co/200x200/dcfce7/166534?text=Ortodoncia"},
-  {id:4, name:"Implante dental", desc:"Recupera funcionalidad y estética.", price:1800000, duration:120, status:'activo', img:"https://placehold.co/200x200/ede9fe/5b21b6?text=Implante"},
-  {id:5, name:"Carillas dentales", desc:"Diseño de sonrisa con carillas de porcelana.", price:0, duration:90, status:'proximamente', img:"https://placehold.co/200x200/fce7f3/9d174d?text=Carillas"},
-  {id:6, name:"Endodoncia", desc:"Tratamiento de conducto.", price:0, duration:60, status:'no_disponible', img:"https://placehold.co/200x200/f1f5f9/64748b?text=Endodoncia"},
+  {id:1, name:"Limpieza dental", desc:"Previene caries y mantiene tu boca sana.", price:120000, duration:45, status:'activo', img:"https://images.pexels.com/photos/3779706/pexels-photo-3779706.jpeg?auto=compress&cs=tinysrgb&w=400"},
+  {id:2, name:"Blanqueamiento dental", desc:"Dientes más blancos en una sola sesión.", price:250000, duration:60, status:'activo', img:"https://images.pexels.com/photos/6627519/pexels-photo-6627519.jpeg?auto=compress&cs=tinysrgb&w=400"},
+  {id:3, name:"Ortodoncia (control)", desc:"Alinea tus dientes y mejora tu sonrisa.", price:90000, duration:30, status:'activo', img:"https://images.pexels.com/photos/4269934/pexels-photo-4269934.jpeg?auto=compress&cs=tinysrgb&w=400"},
+  {id:4, name:"Implante dental", desc:"Recupera funcionalidad y estética.", price:1800000, duration:120, status:'activo', img:"https://images.pexels.com/photos/3946833/pexels-photo-3946833.jpeg?auto=compress&cs=tinysrgb&w=400"},
+  {id:5, name:"Carillas dentales", desc:"Diseño de sonrisa con carillas de porcelana.", price:0, duration:90, status:'proximamente', img:"https://images.pexels.com/photos/5622010/pexels-photo-5622010.jpeg?auto=compress&cs=tinysrgb&w=400"},
+  {id:6, name:"Endodoncia", desc:"Tratamiento de conducto.", price:0, duration:60, status:'no_disponible', img:"https://images.pexels.com/photos/3946835/pexels-photo-3946835.jpeg?auto=compress&cs=tinysrgb&w=400"},
 ];
 
 // Promoción del mes: el administrador la liga a un servicio existente (hereda su duración) y define el precio promocional
@@ -399,8 +399,8 @@ let myAppointments = [];
 
 // Número consecutivo de consulta — en esta demo vive solo en esta sesión; con Firebase será un contador
 // compartido real entre todos los clientes (ej. un documento "contador" que se incrementa en cada agenda).
-let APPT_COUNTER = 57; // ejemplo: ya van 57 consultas atendidas
-function nextApptNumber(){ APPT_COUNTER++; return String(APPT_COUNTER).padStart(5,'0'); }
+let APPT_COUNTER = 0; // arranca en 0 para que la primera consulta sea la 01
+function nextApptNumber(){ APPT_COUNTER++; return String(APPT_COUNTER).padStart(2,'0'); }
 
 /* ========================= UI helpers ========================= */
 function openModal(id){ document.getElementById(id).classList.add('active'); }
@@ -830,14 +830,16 @@ function acceptAndSendWhatsapp(){
     : 'Adjunto el comprobante de pago para confirmar mi cita.';
   const msg = encodeURIComponent(
 `Hola ${CLINIC.name}, quiero agendar una cita.
-Consulta Nro. ${apptNumber}
-Servicio: ${s.name}${bk.promoPrice?' (promoción)':''} (${money(price)})
-Fecha: ${nice} a las ${to12h(bk.time)}
-Nombre: ${bk.name}
-Motivo de la consulta: ${bk.reason||'-'}
-Método de pago: ${chosen.label}
 
-${lastLine}`
+*Consulta Nro:* ${apptNumber}
+
+*Cliente:* ${bk.name}
+*Servicio:* ${s.name}${bk.promoPrice?' (promoción)':''} — ${money(price)}
+*Motivo de consulta:* ${bk.reason||'-'}
+*Fecha y hora:* ${nice}, ${to12h(bk.time)}
+*Método de pago:* ${chosen.label}
+
+*Observación:* ${lastLine}`
   );
 
   const expiresAt = Date.now() + 30*60*1000;
