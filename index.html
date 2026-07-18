@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>Vitalis Dental</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy-900:#0a1f3d; --navy-800:#0f2c54; --navy-700:#15396b;
+  --cyan-400:#22d3ee; --cyan-500:#06b6d4;
+  --teal-600:#0d9488; --teal-700:#0f766e;
+  --coral-500:#fb7185; --coral-600:#e11d48;
+  --amber-400:#fbbf24; --amber-500:#f59e0b;
+  --ink-900:#0f172a; --ink-600:#475569; --ink-400:#94a3b8;
+  --paper:#f6f8fb;
+}
+*{box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:var(--paper);color:var(--ink-900)}
+h1,h2,h3,h4,.font-display{font-family:'Poppins',sans-serif}
+.app-shell{max-width:430px;margin:0 auto;background:#fff;min-height:100vh;position:relative;overflow-x:hidden;box-shadow:0 0 40px rgba(10,31,61,.12)}
+.hide{display:none!important}
+.tab-active{color:var(--teal-700)!important}
+.tab-active .nav-ic{color:var(--teal-700)!important}
+.modal-overlay{position:fixed;inset:0;background:rgba(10,20,35,.55);z-index:60;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s ease}
+.modal-overlay.active{opacity:1;pointer-events:auto}
+.modal-panel{background:#fff;width:100%;max-width:430px;max-height:88vh;overflow-y:auto;border-radius:24px 24px 0 0;transform:translateY(30px);transition:transform .3s ease;padding-bottom:env(safe-area-inset-bottom)}
+.modal-overlay.active .modal-panel{transform:translateY(0)}
+.day-cell{aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;border-radius:10px;font-size:13px;cursor:pointer;font-weight:500}
+.day-cell.avail{background:#f0fdfa;color:var(--teal-700)}
+.day-cell.avail:hover{background:#ccfbf1}
+.day-cell.taken{color:var(--ink-400);cursor:not-allowed}
+.day-cell.past{color:var(--ink-400);cursor:not-allowed;opacity:.4}
+.day-cell.picked{background:var(--teal-700);color:#fff}
+.time-slot{padding:10px 4px;border-radius:10px;text-align:center;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid #e2e8f0;color:var(--ink-600)}
+.time-slot:hover{border-color:var(--teal-600)}
+.time-slot.picked{background:var(--teal-700);border-color:var(--teal-700);color:#fff}
+.time-slot.taken{background:#f1f5f9;color:var(--ink-400);cursor:not-allowed;text-decoration:line-through}
+.step-dot{width:6px;height:6px;border-radius:999px;background:#e2e8f0}
+.step-dot.on{background:var(--teal-700);width:18px;transition:width .2s}
+.field{width:100%;border:1.5px solid #e2e8f0;border-radius:12px;padding:12px 14px;font-size:14px;outline:none}
+.field:focus{border-color:var(--teal-600)}
+.acc-plus{transition:transform .2s}
+.acc-open .acc-plus{transform:rotate(45deg)}
+.acc-body{max-height:0;overflow:hidden;transition:max-height .25s ease}
+</style>
+</head>
+<body>
+<div class="app-shell" id="app">
+
+<!-- ===== HEADER ===== -->
+<header style="background:linear-gradient(160deg,var(--navy-900),var(--navy-700));" class="pt-6 pb-16 px-5 relative">
+  <div class="flex items-center justify-between">
+    <button onclick="openDrawer()" class="text-white text-xl w-10 h-10 flex items-center justify-center rounded-full active:bg-white/10" aria-label="Abrir menú"><i class="fa-solid fa-bars"></i></button>
+    <button onclick="openModal('modal-notif')" class="relative text-cyan-300 text-xl w-10 h-10 flex items-center justify-center rounded-full active:bg-white/10" aria-label="Notificaciones">
+      <i class="fa-solid fa-bell"></i>
+      <span class="absolute top-1 right-1 bg-rose-500 text-white text-[10px] leading-none rounded-full w-4 h-4 flex items-center justify-center font-bold">2</span>
+    </button>
+  </div>
+  <div class="text-center mt-1">
+    <i class="fa-solid fa-tooth text-cyan-300 text-4xl"></i>
+    <h1 class="font-display font-extrabold text-white text-2xl mt-2 tracking-tight">VITALIS <span class="text-cyan-300">DENTAL</span></h1>
+    <p class="text-slate-300 text-sm mt-1">Tu sonrisa, nuestra prioridad</p>
+  </div>
+</header>
+
+<!-- ===== STATUS CARD (overlaps header) ===== -->
+<div class="px-5 -mt-9 relative z-10">
+  <div class="bg-white rounded-2xl shadow-lg p-4 flex items-center justify-between">
+    <div>
+      <div id="open-status" class="flex items-center gap-1.5 font-semibold text-sm"><span id="open-dot" class="w-2 h-2 rounded-full inline-block"></span><span id="open-text"></span></div>
+      <p class="text-xs text-ink-600 mt-1" style="color:var(--ink-600)">Hoy 8:00 AM – 6:00 PM</p>
+      <p id="closes-in" class="text-[11px] font-semibold mt-0.5" style="color:var(--teal-700)"></p>
+      <button onclick="openModal('modal-horario')" class="text-xs text-teal-700 font-semibold mt-1 underline">Ver horario completo</button>
+    </div>
+    <div class="text-right">
+      <div class="flex items-center gap-1 justify-end text-amber-500 font-bold"><i class="fa-solid fa-star text-sm"></i><span id="rating-avg">–</span></div>
+      <p class="text-xs" style="color:var(--ink-400)"><span id="rating-count">0</span> reseñas</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== WELCOME BANNER ===== -->
+<div class="px-5 mt-4">
+  <div class="rounded-2xl overflow-hidden relative" style="background:linear-gradient(120deg,var(--navy-800),var(--teal-700));min-height:130px">
+    <div class="absolute inset-0 w-full h-full opacity-20" style="background:radial-gradient(circle at 30% 30%, #22d3ee, transparent 60%)"></div>
+    <div class="relative p-5">
+      <p class="text-white font-display font-semibold text-lg leading-snug">Bienvenido a<br>Vitalis Dental</p>
+      <p class="text-slate-200 text-sm mt-1">¿En qué podemos ayudarte hoy?</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== QUICK ACTIONS ===== -->
+<div class="px-5 mt-4 grid grid-cols-4 gap-3 text-center">
+  <button onclick="openWhatsappGeneral()" class="flex flex-col items-center gap-1.5">
+    <span class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg"><i class="fa-brands fa-whatsapp"></i></span>
+    <span class="text-[11px] font-medium" style="color:var(--ink-600)">WhatsApp</span>
+  </button>
+  <button onclick="callClinic()" class="flex flex-col items-center gap-1.5">
+    <span class="w-12 h-12 rounded-2xl bg-sky-50 text-sky-600 flex items-center justify-center text-lg"><i class="fa-solid fa-phone"></i></span>
+    <span class="text-[11px] font-medium" style="color:var(--ink-600)">Llamar</span>
+  </button>
+  <button onclick="startBooking()" class="flex flex-col items-center gap-1.5">
+    <span class="w-12 h-12 rounded-2xl bg-violet-50 text-violet-600 flex items-center justify-center text-lg"><i class="fa-solid fa-calendar-check"></i></span>
+    <span class="text-[11px] font-medium" style="color:var(--ink-600)">Agendar</span>
+  </button>
+  <button onclick="openModal('modal-ubicacion')" class="flex flex-col items-center gap-1.5">
+    <span class="w-12 h-12 rounded-2xl bg-teal-50 text-teal-700 flex items-center justify-center text-lg"><i class="fa-solid fa-location-dot"></i></span>
+    <span class="text-[11px] font-medium" style="color:var(--ink-600)">Ubicación</span>
+  </button>
+</div>
+
+<!-- ===== PROMO SECTION ===== -->
+<section id="sec-promos" class="px-5 mt-6">
+  <h2 class="font-display font-semibold text-sm tracking-wide" style="color:var(--navy-800)">PROMOCIÓN DEL MES</h2>
+  <div id="promo-card" class="mt-3"></div>
+</section>
+
+<!-- ===== SERVICES ===== -->
+<section id="sec-servicios" class="px-5 mt-7">
+  <div class="flex items-center gap-3">
+    <span class="h-px bg-slate-200 flex-1"></span>
+    <h2 class="font-display font-semibold text-sm tracking-wide" style="color:var(--navy-800)">NUESTROS SERVICIOS</h2>
+    <span class="h-px bg-slate-200 flex-1"></span>
+  </div>
+  <div id="services-list" class="mt-4 space-y-3"></div>
+</section>
+
+<!-- ===== REVIEWS ===== -->
+<section id="sec-resenas" class="px-5 mt-7 hide">
+  <h2 class="font-display font-semibold text-sm tracking-wide" style="color:var(--navy-800)">RESEÑAS DE PACIENTES</h2>
+  <button onclick="openWriteReview()" class="w-full mt-3 py-2.5 rounded-xl border border-dashed text-sm font-semibold flex items-center justify-center gap-2" style="border-color:var(--teal-600);color:var(--teal-700)"><i class="fa-regular fa-star"></i>Escribir una reseña</button>
+  <div class="mt-3 space-y-3" id="reviews-list"></div>
+</section>
+
+<!-- ===== CONTACTO ===== -->
+<section id="sec-contacto" class="px-5 mt-7 hide">
+  <h2 class="font-display font-semibold text-sm tracking-wide" style="color:var(--navy-800)">NUESTRAS REDES</h2>
+  <div class="mt-3 grid grid-cols-2 gap-3">
+    <a href="https://instagram.com/tu_usuario" target="_blank" class="flex items-center gap-3 bg-white border border-slate-100 rounded-xl p-3 shadow-sm">
+      <span class="w-9 h-9 rounded-full bg-pink-50 text-pink-600 flex items-center justify-center"><i class="fa-brands fa-instagram"></i></span>
+      <span class="text-xs font-medium">Instagram</span>
+    </a>
+    <a href="https://facebook.com/tu_pagina" target="_blank" class="flex items-center gap-3 bg-white border border-slate-100 rounded-xl p-3 shadow-sm">
+      <span class="w-9 h-9 rounded-full bg-sky-50 text-sky-600 flex items-center justify-center"><i class="fa-brands fa-facebook-f"></i></span>
+      <span class="text-xs font-medium">Facebook</span>
+    </a>
+    <a href="https://tiktok.com/@tu_usuario" target="_blank" class="flex items-center gap-3 bg-white border border-slate-100 rounded-xl p-3 shadow-sm">
+      <span class="w-9 h-9 rounded-full bg-slate-100 text-slate-800 flex items-center justify-center"><i class="fa-brands fa-tiktok"></i></span>
+      <span class="text-xs font-medium">TikTok</span>
+    </a>
+    <button onclick="openWhatsappGeneral()" class="flex items-center gap-3 bg-white border border-slate-100 rounded-xl p-3 shadow-sm text-left">
+      <span class="w-9 h-9 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center"><i class="fa-brands fa-whatsapp"></i></span>
+      <span class="text-xs font-medium">WhatsApp</span>
+    </button>
+  </div>
+</section>
+
+<div class="h-56"></div>
+
+<!-- ===== BOTÓN FLOTANTE: PREGUNTAR ANTES DE AGENDAR ===== -->
+<button onclick="openWhatsappGeneral()" class="fixed z-40 w-14 h-14 rounded-full flex items-center justify-center text-white text-2xl shadow-lg active:scale-95 transition-transform" style="background:#25D366;bottom:158px;right:max(16px, calc(50vw - 199px))" aria-label="Preguntar por WhatsApp antes de agendar">
+  <i class="fa-solid fa-comment-dots"></i>
+</button>
+
+<!-- ===== FLOATING CTA ===== -->
+<button onclick="openAppointmentsPanel()" class="fixed bottom-20 left-1/2 z-30" style="transform:translateX(-50%);max-width:430px;width:calc(100% - 40px)">
+  <span class="w-full flex items-center justify-between text-white font-semibold text-sm rounded-2xl px-5 py-4 shadow-lg" style="background:var(--teal-700)">
+    <span class="flex items-center gap-2"><i class="fa-solid fa-calendar-days"></i> Ver mis citas <span id="appt-count-badge" class="bg-white/25 text-[11px] rounded-full px-2 py-0.5 hide">0</span></span>
+    <i class="fa-solid fa-chevron-up text-xs"></i>
+  </span>
+</button>
+
+<!-- ===== BOTTOM NAV ===== -->
+<nav class="fixed bottom-0 left-1/2 z-30 bg-white border-t border-slate-100" style="transform:translateX(-50%);max-width:430px;width:100%">
+  <div class="grid grid-cols-5 text-[10px] font-medium" style="color:var(--ink-400)">
+    <button class="tab-btn py-2.5 flex flex-col items-center gap-1 tab-active" data-tab="inicio" onclick="switchTab('inicio')"><i class="fa-solid fa-house nav-ic"></i>Inicio</button>
+    <button class="tab-btn py-2.5 flex flex-col items-center gap-1" data-tab="servicios" onclick="switchTab('servicios')"><i class="fa-solid fa-tooth nav-ic"></i>Servicios</button>
+    <button class="tab-btn py-2.5 flex flex-col items-center gap-1" data-tab="promos" onclick="switchTab('promos')"><i class="fa-solid fa-tag nav-ic"></i>Promos</button>
+    <button class="tab-btn py-2.5 flex flex-col items-center gap-1" data-tab="resenas" onclick="switchTab('resenas')"><i class="fa-solid fa-star nav-ic"></i>Reseñas</button>
+    <button class="tab-btn py-2.5 flex flex-col items-center gap-1" data-tab="contacto" onclick="switchTab('contacto')"><i class="fa-solid fa-comment nav-ic"></i>Contacto</button>
+  </div>
+</nav>
+
+<!-- ===== DRAWER (menú) ===== -->
+<div id="drawer-overlay" class="modal-overlay" style="align-items:stretch;justify-content:flex-start">
+  <div class="modal-panel" style="max-width:280px;border-radius:0 20px 20px 0;min-height:100vh;max-height:100vh">
+    <div class="p-5" style="background:linear-gradient(160deg,var(--navy-900),var(--navy-700))">
+      <i class="fa-solid fa-tooth text-cyan-300 text-2xl"></i>
+      <p class="text-white font-display font-semibold mt-2">Vitalis Dental</p>
+      <p class="text-slate-300 text-xs">Panel del paciente</p>
+    </div>
+    <div class="p-3">
+      <button onclick="saveContact()" class="w-full flex items-center gap-3 p-3 rounded-xl active:bg-slate-50 text-left"><i class="fa-solid fa-address-card w-5" style="color:var(--teal-700)"></i><span class="text-sm font-medium">Guardar contacto</span></button>
+      <button onclick="openQR()" class="w-full flex items-center gap-3 p-3 rounded-xl active:bg-slate-50 text-left"><i class="fa-solid fa-qrcode w-5" style="color:var(--teal-700)"></i><span class="text-sm font-medium">Compartir por QR</span></button>
+      <button onclick="shareApp()" class="w-full flex items-center gap-3 p-3 rounded-xl active:bg-slate-50 text-left"><i class="fa-solid fa-share-nodes w-5" style="color:var(--teal-700)"></i><span class="text-sm font-medium">Compartir por mensaje</span></button>
+      <button onclick="openModal('modal-horario')" class="w-full flex items-center gap-3 p-3 rounded-xl active:bg-slate-50 text-left"><i class="fa-regular fa-clock w-5" style="color:var(--teal-700)"></i><span class="text-sm font-medium">Horario de atención</span></button>
+      <div class="h-px bg-slate-100 my-2"></div>
+      <button onclick="toggleAdminMode()" class="w-full flex items-center gap-3 p-3 rounded-xl active:bg-slate-50 text-left"><i class="fa-solid fa-user-shield w-5" style="color:var(--ink-400)"></i><span class="text-sm font-medium" id="admin-toggle-label">Modo administrador</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL: NOTIFICACIONES ===== -->
+<div id="modal-notif" class="modal-overlay">
+  <div class="modal-panel p-5">
+    <div class="w-10 h-1.5 bg-slate-200 rounded-full mx-auto mb-4"></div>
+    <h3 class="font-display font-semibold text-base">Notificaciones</h3>
+    <div class="mt-4 space-y-3">
+      <div class="p-3 bg-teal-50 rounded-xl text-sm"><p class="font-semibold text-teal-800">Recordatorio de cita</p><p class="text-xs text-teal-700 mt-0.5">Tu control queda mejor agendado con 24h de anticipación.</p></div>
+      <div class="p-3 bg-amber-50 rounded-xl text-sm"><p class="font-semibold text-amber-800">Promo del mes</p><p class="text-xs text-amber-700 mt-0.5">20% OFF en limpieza dental profesional.</p></div>
+    </div>
+    <button onclick="closeModal('modal-notif')" class="w-full mt-5 py-3 rounded-xl font-semibold text-sm text-white" style="background:var(--navy-800)">Cerrar</button>
+  </div>
+</div>
+
+<!-- ===== MODAL: HORARIO ===== -->
+<div id="modal-horario" class="modal-overlay">
+  <div class="modal-panel p-5">
+    <div class="w-10 h-1.5 bg-slate-200 rounded-full mx-auto mb-4"></div>
+    <h3 class="font-display font-semibold text-base">Horario de atención</h3>
+    <div class="mt-4 space-y-2 text-sm">
+      <div class="flex justify-between py-2 border-b border-slate-100"><span>Lunes a viernes</span><span class="font-semibold">8:00 AM – 6:00 PM</span></div>
+      <div class="flex justify-between py-2 border-b border-slate-100"><span>Sábados</span><span class="font-semibold">9:00 AM – 1:00 PM</span></div>
+      <div class="flex justify-between py-2"><span>Domingos</span><span class="font-semibold text-rose-500">Cerrado</span></div>
+    </div>
+    <button onclick="closeModal('modal-horario'); openAgenda();" class="w-full mt-5 flex items-center justify-center gap-2 py-3 rounded-xl font-semibold text-sm text-white" style="background:var(--teal-700)"><i class="fa-solid fa-calendar-days"></i>Ver agenda del consultorio</button>
+    <button onclick="closeModal('modal-horario')" class="w-full mt-2 py-3 rounded-xl font-semibold text-sm border border-slate-200">Cerrar</button>
+  </div>
+</div>
+
+<!-- ===== MODAL: AGENDA DEL CONSULTORIO ===== -->
+<div id="modal-agenda" class="modal-overlay">
+  <div class="modal-panel p-5">
+    <div class="w-10 h-1.5 bg-slate-200 rounded-full mx-auto mb-4"></div>
+    <h3 class="font-display font-semibold text-base mb-1">Agenda del consultorio</h3>
+    <p class="text-xs mb-3" style="color:var(--ink-400)">Consulta qué espacios están libres, en proceso o ya agendados.</p>
+    <div class="flex items-center justify-between mb-2">
+      <button onclick="agendaCalMonth(-1)" class="w-8 h-8 rounded-full hover:bg-slate-100" aria-label="Mes anterior"><i class="fa-solid fa-chevron-left text-xs"></i></button>
+      <p id="agenda-cal-label" class="font-semibold text-sm"></p>
+      <button onclick="agendaCalMonth(1)" class="w-8 h-8 rounded-full hover:bg-slate-100" aria-label="Mes siguiente"><i class="fa-solid fa-chevron-right text-xs"></i></button>
+    </div>
+    <div class="grid grid-cols-7 gap-1 text-center text-[11px] font-semibold mb-1" style="color:var(--ink-400)">
+      <div>D</div><div>L</div><div>M</div><div>M</div><div>J</div><div>V</div><div>S</div>
+    </div>
+    <div id="agenda-cal-grid" class="grid grid-cols-7 gap-1 mb-4"></div>
+    <div class="flex items-center gap-3 text-[11px] mb-3" style="color:var(--ink-600)">
+      <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full inline-block" style="background:#34d399"></span>Disponible</span>
+      <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full inline-block" style="background:#fbbf24"></span>En proceso</span>
+      <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full inline-block" style="background:#94a3b8"></span>Agendado</span>
+    </div>
+    <div id="agenda-timeline" class="max-h-72 overflow-y-auto space-y-2"></div>
+    <button onclick="closeModal('modal-agenda')" class="w-full mt-4 py-3 rounded-xl font-semibold text-sm border border-slate-200">Cerrar</button>
+  </div>
+</div>
+<div id="modal-ubicacion" class="modal-overlay">
+  <div class="modal-panel p-5">
+    <div class="w-10 h-1.5 bg-slate-200 rounded-full mx-auto mb-4"></div>
+    <h3 class="font-display font-semibold text-base">Nuestra ubicación</h3>
+    <p class="text-sm mt-2" style="color:var(--ink-600)"><i class="fa-solid fa-location-dot mr-1.5" style="color:var(--teal-700)"></i><span id="clinic-address">Cra. 8 # 12-45, Centro, Ipiales, Nariño</span></p>
+    <button onclick="openDirections()" class="w-full mt-4 flex items-center justify-center gap-2 py-3.5 rounded-xl text-white font-bold text-sm tracking-wide" style="background:var(--teal-700)"><i class="fa-solid fa-location-arrow"></i>CÓMO LLEGAR</button>
+    <p class="text-xs text-center mt-3" style="color:var(--ink-400)">Se activará el GPS de tu celular con la ruta hasta el consultorio.</p>
+    <button onclick="closeModal('modal-ubicacion')" class="w-full mt-4 py-3 rounded-xl font-semibold text-sm border border-slate-200">Cerrar</button>
+  </div>
+</div>
+
+<!-- ===== MODAL: QR ===== -->
+<div id="modal-qr" class="modal-overlay">
+  <div class="modal-panel p-5 text-center">
+    <div class="w-10 h-1.5 bg-slate-200 rounded-full mx-auto mb-4"></div>
+    <h3 class="font-display font-semibold text-base">Escanea para abrir la app</h3>
+    <div class="flex justify-center mt-4">
+      <img id="qr-img" src="" alt="Código QR de la mini app" class="rounded-xl border border-slate-100">
+    </div>
+    <p class="text-xs mt-3 break-all" id="qr-url-text" style="color:var(--ink-400)"></p>
+    <p class="text-xs mt-1" style="color:var(--ink-400)">Cualquier celular puede escanearlo para abrir esta mini app.</p>
+    <button onclick="closeModal('modal-qr')" class="w-full mt-4 py-3 rounded-xl font-semibold text-sm text-white" style="background:var(--navy-800)">Cerrar</button>
+  </div>
+</div>
+
+<!-- ===== MODAL: MIS CITAS ===== -->
+<div id="modal-appointments" class="modal-overlay">
+  <div class="modal-panel p-5">
+    <div class="w-10 h-1.5 bg-slate-200 rounded-full mx-auto mb-4"></div>
+    <h3 class="font-display font-semibold text-base">Mis citas</h3>
+    <div id="appointments-list" class="mt-4 space-y-3"></div>
+    <button onclick="startBooking(); closeModal('modal-appointments')" class="w-full mt-4 py-3 rounded-xl font-semibold text-sm text-white" style="background:var(--teal-700)">Agendar nueva cita</button>
+    <button onclick="closeModal('modal-appointments')" class="w-full mt-2 py-3 rounded-xl font-semibold text-sm border border-slate-200">Cerrar</button>
+  </div>
+</div>
+
+<!-- ===== MODAL: ESCRIBIR RESEÑA ===== -->
+<div id="modal-review-form" class="modal-overlay">
+  <div class="modal-panel p-5">
+    <div class="w-10 h-1.5 bg-slate-200 rounded-full mx-auto mb-4"></div>
+    <h3 class="font-display font-semibold text-base mb-1">Cuéntanos tu experiencia</h3>
+    <p class="text-xs mb-4" style="color:var(--ink-400)">Tu reseña ayuda a otros pacientes a conocernos.</p>
+    <div class="flex justify-center gap-2 mb-4 text-3xl" id="review-star-picker">
+      <i class="fa-regular fa-star cursor-pointer" data-star="1" onclick="setReviewStars(1)" style="color:#fbbf24"></i>
+      <i class="fa-regular fa-star cursor-pointer" data-star="2" onclick="setReviewStars(2)" style="color:#fbbf24"></i>
+      <i class="fa-regular fa-star cursor-pointer" data-star="3" onclick="setReviewStars(3)" style="color:#fbbf24"></i>
+      <i class="fa-regular fa-star cursor-pointer" data-star="4" onclick="setReviewStars(4)" style="color:#fbbf24"></i>
+      <i class="fa-regular fa-star cursor-pointer" data-star="5" onclick="setReviewStars(5)" style="color:#fbbf24"></i>
+    </div>
+    <div class="space-y-3">
+      <input id="rv-name" class="field" placeholder="Tu nombre">
+      <textarea id="rv-text" class="field" rows="3" placeholder="¿Cómo fue tu experiencia?"></textarea>
+    </div>
+    <p id="rv-error" class="text-xs text-rose-500 mt-2 hide">Elige una calificación y escribe tu nombre y tu reseña.</p>
+    <button onclick="submitReview()" class="w-full mt-4 py-3 rounded-xl font-semibold text-sm text-white" style="background:var(--teal-700)">Publicar reseña</button>
+    <button onclick="closeModal('modal-review-form')" class="w-full mt-2 py-3 rounded-xl font-semibold text-sm border border-slate-200">Cancelar</button>
+  </div>
+</div>
+
+<!-- ===== MODAL: AGENDAR (multi-paso) ===== -->
+<div id="modal-booking" class="modal-overlay">
+  <div class="modal-panel">
+    <div class="p-5 pb-3">
+      <div class="flex items-center justify-between">
+        <button id="bk-back" onclick="bookingBack()" class="text-sm font-medium hide" style="color:var(--teal-700)"><i class="fa-solid fa-arrow-left mr-1"></i>Atrás</button>
+        <div class="flex-1"></div>
+        <button onclick="closeModal('modal-booking')" class="text-slate-400 text-lg" aria-label="Cerrar"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="flex gap-1.5 mt-2" id="bk-steps">
+        <span class="step-dot on" data-step="1"></span><span class="step-dot" data-step="2"></span><span class="step-dot" data-step="3"></span><span class="step-dot" data-step="4"></span><span class="step-dot" data-step="5"></span>
+      </div>
+    </div>
+    <div class="px-5 pb-6" id="bk-content"></div>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   DATOS DE EJEMPLO — reemplaza esto por la info real del cliente
+   ========================================================= */
+const CLINIC = {
+  name: "Vitalis Dental",
+  whatsapp: "573116221756",              // número con indicativo de país, sin + ni espacios
+  phone: "+573116221756",
+  address: "Cra. 8 # 12-45, Centro, Ipiales, Nariño",
+  lat: 0.8290, lng: -77.6415,            // coordenadas del consultorio para Maps / Waze
+};
+
+// Cada servicio tiene un "status" que controla el administrador:
+// 'activo'         -> se muestra normal y se puede agendar
+// 'proximamente'   -> se muestra con la etiqueta PRÓXIMAMENTE, no se puede agendar todavía
+// 'no_disponible'  -> se muestra con la etiqueta NO DISPONIBLE, el consultorio dejó de ofrecerlo por ahora
+const SERVICES = [
+  {id:1, name:"Limpieza dental", desc:"Previene caries y mantiene tu boca sana.", price:120000, duration:45, status:'activo', img:"https://images.pexels.com/photos/3779706/pexels-photo-3779706.jpeg?auto=compress&cs=tinysrgb&w=400"},
+  {id:2, name:"Blanqueamiento dental", desc:"Dientes más blancos en una sola sesión.", price:250000, duration:60, status:'activo', img:"https://images.pexels.com/photos/6627519/pexels-photo-6627519.jpeg?auto=compress&cs=tinysrgb&w=400"},
+  {id:3, name:"Ortodoncia (control)", desc:"Alinea tus dientes y mejora tu sonrisa.", price:90000, duration:30, status:'activo', img:"https://images.pexels.com/photos/4269934/pexels-photo-4269934.jpeg?auto=compress&cs=tinysrgb&w=400"},
+  {id:4, name:"Implante dental", desc:"Recupera funcionalidad y estética.", price:1800000, duration:120, status:'activo', img:"https://images.pexels.com/photos/3946833/pexels-photo-3946833.jpeg?auto=compress&cs=tinysrgb&w=400"},
+  {id:5, name:"Carillas dentales", desc:"Diseño de sonrisa con carillas de porcelana.", price:0, duration:90, status:'proximamente', img:"https://images.pexels.com/photos/5622010/pexels-photo-5622010.jpeg?auto=compress&cs=tinysrgb&w=400"},
+  {id:6, name:"Endodoncia", desc:"Tratamiento de conducto.", price:0, duration:60, status:'no_disponible', img:"https://images.pexels.com/photos/3946835/pexels-photo-3946835.jpeg?auto=compress&cs=tinysrgb&w=400"},
+];
+
+// Promoción del mes: el administrador la liga a un servicio existente (hereda su duración) y define el precio promocional
+const PROMO = {
+  serviceId: 1,               // debe existir en SERVICES — de ahí toma nombre, imagen y duración
+  discountLabel: '20% OFF',
+  promoPrice: 120000,
+};
+const SCHEDULE = { weekday:{open:'08:00', close:'18:00'}, saturday:{open:'09:00', close:'13:00'} };
+const SLOT_GRANULARITY = 30; // cada cuántos minutos se ofrece un horario "de rejilla" (además de los que libera cada cita)
+const ADMIN_SETTINGS = {
+  cleaningMinutes: 15, // tiempo entre una cita y la siguiente para desinfectar y organizar el consultorio — lo define el administrador
+  pin: '1234', // PIN de demostración para simular el acceso del administrador — con Firebase esto será un inicio de sesión real (usuario/contraseña), no un PIN visible en el código
+};
+let isAdmin = false;
+
+const REVIEWS = [
+  {id:1, name:"Camila R.", stars:5, text:"Excelente atención, muy puntuales y explican todo el proceso."},
+  {id:2, name:"Jorge M.", stars:5, text:"El proceso de agendar por WhatsApp fue súper rápido."},
+  {id:3, name:"Andrea P.", stars:4, text:"Buen servicio, el consultorio es muy limpio y moderno."},
+];
+
+const PAYMENT_METHODS = [
+  {id:'bancolombia', label:'Bancolombia', sublabel:'Cuenta de ahorros', icon:'fa-building-columns', color:'#FBBF24', value:'000123456789'},
+  {id:'nequi', label:'Nequi', sublabel:'Nequi', icon:'fa-mobile-screen-button', color:'#DA1884', value:'3001234567'},
+  {id:'llave', label:'Llave', sublabel:'Llave', icon:'fa-key', color:'#0f766e', value:'clinica.vitalis'},
+  {id:'efectivo', label:'Efectivo', icon:'fa-money-bill-wave', color:'#16a34a', cash:true},
+];
+
+// Horarios que ya tiene ocupados el consultorio, con su duración y estado (simulado — con Firebase vendrá de la base de datos real)
+let OCCUPIED = {};
+(function seedOccupied(){
+  const d1 = new Date(); d1.setDate(d1.getDate()+1);
+  const d2 = new Date(); d2.setDate(d2.getDate()+2);
+  const key = d => d.toISOString().slice(0,10);
+  OCCUPIED[key(d1)] = [{time:"09:00", duration:45, status:'confirmada'}, {time:"11:00", duration:60, status:'confirmada'}, {time:"15:00", duration:30, status:'confirmada'}];
+  OCCUPIED[key(d2)] = [{time:"10:00", duration:120, status:'confirmada'}];
+})();
+
+let myAppointments = [];
+
+// Número consecutivo de consulta — en esta demo vive solo en esta sesión; con Firebase será un contador
+// compartido real entre todos los clientes (ej. un documento "contador" que se incrementa en cada agenda).
+let APPT_COUNTER = 0; // arranca en 0 para que la primera consulta sea la 01
+function nextApptNumber(){ APPT_COUNTER++; return String(APPT_COUNTER).padStart(2,'0'); }
+
+/* ========================= UI helpers ========================= */
+function openModal(id){ document.getElementById(id).classList.add('active'); }
+function closeModal(id){ document.getElementById(id).classList.remove('active'); }
+function openDrawer(){ document.getElementById('drawer-overlay').classList.add('active'); }
+document.getElementById('drawer-overlay').addEventListener('click', e=>{ if(e.target.id==='drawer-overlay') closeModal('drawer-overlay'); });
+document.querySelectorAll('.modal-overlay').forEach(m=>{
+  m.addEventListener('click', e=>{ if(e.target===m) m.classList.remove('active'); });
+});
+
+function switchTab(tab){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('tab-active', b.dataset.tab===tab));
+  const sections = {inicio:['sec-promos','sec-servicios'], servicios:['sec-servicios'], promos:['sec-promos'], resenas:['sec-resenas'], contacto:['sec-contacto']};
+  const all = ['sec-promos','sec-servicios','sec-resenas','sec-contacto'];
+  all.forEach(id=>document.getElementById(id).classList.add('hide'));
+  (sections[tab]||[]).forEach(id=>document.getElementById(id).classList.remove('hide'));
+  document.getElementById('app').scrollIntoView({behavior:'smooth'});
+}
+
+function money(n){ return "$" + n.toLocaleString('es-CO'); }
+function to12h(t){
+  let [h,m] = t.split(':').map(Number);
+  const ampm = h>=12 ? 'PM' : 'AM';
+  h = h % 12; if(h===0) h = 12;
+  return `${h}:${String(m).padStart(2,'0')} ${ampm}`;
+}
+function timeToMin(t){ const [h,m] = t.split(':').map(Number); return h*60+m; }
+function minToTime(mins){ const h=Math.floor(mins/60), m=mins%60; return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`; }
+function getDaySchedule(date){
+  const dow = date.getDay();
+  if(dow===0) return null; // domingo cerrado
+  return dow===6 ? SCHEDULE.saturday : SCHEDULE.weekday;
+}
+/* Calcula, para un día y una duración de servicio dadas, qué horarios de inicio caben
+   sin chocar con otra cita ya agendada (sumando su duración + el tiempo de limpieza del administrador).
+   Para no dejar huecos muertos, además de la rejilla fija de cada 30 min, se agrega como candidato
+   el minuto exacto en que queda libre cada cita ya agendada (start + duración + limpieza). */
+function daySlotsWithStatus(dateKey, dateObj, duration){
+  const sched = getDaySchedule(dateObj);
+  if(!sched) return [];
+  const openMin = timeToMin(sched.open), closeMin = timeToMin(sched.close);
+  const occ = OCCUPIED[dateKey] || [];
+
+  const candidateSet = new Set();
+  for(let t=openMin; t+duration<=closeMin; t+=SLOT_GRANULARITY) candidateSet.add(t);
+  occ.forEach(o=>{
+    const freeAt = timeToMin(o.time) + o.duration + ADMIN_SETTINGS.cleaningMinutes;
+    if(freeAt>=openMin && freeAt+duration<=closeMin) candidateSet.add(freeAt);
+  });
+
+  const slots = Array.from(candidateSet).sort((a,b)=>a-b).map(t=>{
+    const start = t, endBuffered = t + duration + ADMIN_SETTINGS.cleaningMinutes;
+    const clash = occ.some(o=>{
+      const oStart = timeToMin(o.time);
+      const oEndBuffered = oStart + o.duration + ADMIN_SETTINGS.cleaningMinutes;
+      return start < oEndBuffered && oStart < endBuffered;
+    });
+    return {time:minToTime(t), available:!clash};
+  });
+  return slots;
+}
+
+function openWhatsappGeneral(){
+  const msg = encodeURIComponent(`Hola ${CLINIC.name}, quisiera más información.`);
+  window.open(`https://wa.me/${CLINIC.whatsapp}?text=${msg}`, '_blank');
+}
+function callClinic(){ window.location.href = `tel:${CLINIC.phone}`; }
+
+function openDirections(){
+  // Abre la app de navegación del celular (Google/Apple Maps) ya con la ruta trazada al consultorio
+  window.open(`https://www.google.com/maps/dir/?api=1&destination=${CLINIC.lat},${CLINIC.lng}&travelmode=driving`, '_blank');
+}
+
+function saveContact(){
+  const vcard = `BEGIN:VCARD\nVERSION:3.0\nFN:${CLINIC.name}\nORG:${CLINIC.name}\nTEL;TYPE=WORK,VOICE:${CLINIC.phone}\nADR;TYPE=WORK:;;${CLINIC.address};;;;\nEND:VCARD`;
+  const blob = new Blob([vcard], {type:'text/vcard'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `${CLINIC.name}.vcf`; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+}
+
+function openQR(){
+  // Genera el QR con el enlace real de esta página, para que cualquier celular pueda escanearlo y abrirla directamente
+  const url = window.location.href;
+  document.getElementById('qr-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(url)}`;
+  document.getElementById('qr-url-text').textContent = url;
+  openModal('modal-qr');
+}
+
+function shareApp(){
+  const url = window.location.href;
+  const text = `Agenda tu cita en ${CLINIC.name} desde aquí: `;
+  if(navigator.share){
+    navigator.share({title:CLINIC.name, text, url}).catch(()=>{});
+  } else {
+    // Si el navegador no soporta el menú nativo de compartir, se abre WhatsApp con el enlace ya redactado
+    window.open(`https://wa.me/?text=${encodeURIComponent(text+url)}`, '_blank');
+  }
+}
+
+/* ========================= Servicios ========================= */
+function renderPromo(){
+  const s = SERVICES.find(x=>x.id===PROMO.serviceId);
+  if(!s) return;
+  document.getElementById('promo-card').innerHTML = `
+    <button onclick="startBooking(${s.id}, ${PROMO.promoPrice})" class="w-full text-left bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex active:scale-[0.99] transition-transform">
+      <div class="p-4 flex-1">
+        <div class="flex items-center gap-1 text-amber-500 text-[11px] font-bold"><i class="fa-solid fa-star"></i>PROMO DEL MES</div>
+        <h3 class="font-display font-bold text-base mt-1 leading-snug">${s.name}</h3>
+        <p class="text-xs mt-1" style="color:var(--ink-600)">${s.desc}</p>
+        <p class="font-display font-bold text-lg mt-2" style="color:var(--teal-700)">${money(PROMO.promoPrice)} <span class="text-xs font-normal line-through" style="color:var(--ink-400)">${money(s.price)}</span></p>
+        <span class="inline-block mt-1 text-[11px] font-semibold" style="color:var(--teal-700)">Toca para agendar <i class="fa-solid fa-arrow-right ml-0.5"></i></span>
+      </div>
+      <div class="relative w-28 flex-shrink-0">
+        <img src="${s.img}" class="w-full h-full object-cover" alt="${s.name}" onerror="this.onerror=null;this.src='https://placehold.co/200x200/e2e8f0/64748b?text=${encodeURIComponent(s.name)}'">
+        <span class="absolute top-2 right-2 bg-rose-500 text-white text-[11px] font-bold rounded-full w-11 h-11 flex items-center justify-center leading-none text-center">${PROMO.discountLabel.replace(' ','<br>')}</span>
+      </div>
+    </button>`;
+}
+function renderServices(){
+  const wrap = document.getElementById('services-list');
+  wrap.innerHTML = SERVICES.map(s=>{
+    const comingSoon = s.status==='proximamente';
+    const unavailable = s.status==='no_disponible';
+    const badge = comingSoon
+      ? `<span class="inline-block text-[10px] font-bold px-2 py-0.5 rounded-full mt-1" style="background:#ede9fe;color:#6d28d9">PRÓXIMAMENTE</span>`
+      : unavailable
+      ? `<span class="inline-block text-[10px] font-bold px-2 py-0.5 rounded-full mt-1" style="background:#f1f5f9;color:#64748b">NO DISPONIBLE</span>`
+      : '';
+    return `
+    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-3 flex items-center gap-3 ${unavailable?'opacity-60':''}">
+      <img src="${s.img}" class="w-16 h-16 rounded-xl object-cover flex-shrink-0 ${unavailable?'grayscale':''}" alt="${s.name}" onerror="this.onerror=null;this.src='https://placehold.co/200x200/e2e8f0/64748b?text=${encodeURIComponent(s.name)}'">
+      <div class="flex-1 min-w-0">
+        <p class="font-semibold text-sm">${s.name}</p>
+        <p class="text-xs mt-0.5" style="color:var(--ink-600)">${s.desc}</p>
+        ${(comingSoon||unavailable) ? badge : `<p class="text-xs font-bold mt-1" style="color:var(--teal-700)">${money(s.price)}</p>`}
+      </div>
+      ${(comingSoon||unavailable)
+        ? `<span class="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0" style="background:#f1f5f9;color:#94a3b8" aria-label="No disponible para agendar"><i class="fa-solid fa-lock text-xs"></i></span>`
+        : `<button onclick="startBooking(${s.id})" class="w-9 h-9 rounded-full text-white flex items-center justify-center flex-shrink-0" style="background:var(--teal-700)" aria-label="Agendar ${s.name}"><i class="fa-solid fa-plus text-sm"></i></button>`}
+    </div>`;
+  }).join('');
+}
+function renderReviews(){
+  document.getElementById('reviews-list').innerHTML = REVIEWS.map(r=>`
+    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 relative">
+      <div class="flex items-center justify-between ${isAdmin?'pr-6':''}">
+        <p class="font-semibold text-sm">${r.name}</p>
+        <div class="text-amber-500 text-xs">${'<i class="fa-solid fa-star"></i>'.repeat(r.stars)}${'<i class="fa-regular fa-star"></i>'.repeat(5-r.stars)}</div>
+      </div>
+      <p class="text-xs mt-1.5 ${isAdmin?'pr-6':''}" style="color:var(--ink-600)">${r.text}</p>
+      ${isAdmin ? `<button onclick="deleteReview(${r.id})" class="absolute top-3 right-3 text-slate-300 hover:text-rose-500 text-xs" title="Eliminar reseña (administrador)" aria-label="Eliminar reseña"><i class="fa-solid fa-trash"></i></button>` : ''}
+    </div>
+  `).join('');
+  renderRatingSummary();
+}
+function renderRatingSummary(){
+  const avgEl = document.getElementById('rating-avg');
+  const countEl = document.getElementById('rating-count');
+  if(!avgEl || !countEl) return;
+  const count = REVIEWS.length;
+  const avg = count ? (REVIEWS.reduce((sum,r)=>sum+r.stars,0)/count) : 0;
+  avgEl.textContent = count ? avg.toFixed(1) : '–';
+  countEl.textContent = count;
+}
+function deleteReview(id){
+  if(!confirm('¿Eliminar esta reseña? Esta acción es solo para el administrador del consultorio.')) return;
+  const idx = REVIEWS.findIndex(r=>r.id===id);
+  if(idx>-1){ REVIEWS.splice(idx,1); renderReviews(); }
+}
+
+/* ========================= Modo administrador (demo) =========================
+   En esta demo, el "modo administrador" es solo un PIN local para mostrar el concepto.
+   Con Firebase, esto debe reemplazarse por un inicio de sesión real (Firebase Auth),
+   y las reglas de la base de datos deben impedir que cualquiera borre reseñas sin
+   estar autenticado como administrador — nunca confiar solo en ocultar el botón. */
+function toggleAdminMode(){
+  if(isAdmin){
+    isAdmin = false;
+    document.getElementById('admin-toggle-label').textContent = 'Modo administrador';
+    renderReviews();
+    return;
+  }
+  const pin = prompt('Ingresa el PIN de administrador para gestionar las reseñas:');
+  if(pin===null) return;
+  if(pin===ADMIN_SETTINGS.pin){
+    isAdmin = true;
+    document.getElementById('admin-toggle-label').textContent = 'Salir del modo administrador';
+    renderReviews();
+    alert('Modo administrador activado. Ahora puedes eliminar reseñas.');
+  } else {
+    alert('PIN incorrecto.');
+  }
+}
+
+/* ========================= Reseñas escritas por el cliente ========================= */
+let reviewDraftStars = 0;
+function openWriteReview(){
+  reviewDraftStars = 0;
+  document.getElementById('rv-name').value = '';
+  document.getElementById('rv-text').value = '';
+  document.getElementById('rv-error').classList.add('hide');
+  document.querySelectorAll('#review-star-picker i').forEach(el=>{ el.className='fa-regular fa-star cursor-pointer'; });
+  openModal('modal-review-form');
+}
+function setReviewStars(n){
+  reviewDraftStars = n;
+  document.querySelectorAll('#review-star-picker i').forEach(el=>{
+    const star = Number(el.dataset.star);
+    el.className = star<=n ? 'fa-solid fa-star cursor-pointer' : 'fa-regular fa-star cursor-pointer';
+  });
+}
+function submitReview(){
+  const name = document.getElementById('rv-name').value.trim();
+  const text = document.getElementById('rv-text').value.trim();
+  if(!name || !text || reviewDraftStars===0){ document.getElementById('rv-error').classList.remove('hide'); return; }
+  REVIEWS.unshift({id: Date.now(), name, stars: reviewDraftStars, text});
+  renderReviews();
+  closeModal('modal-review-form');
+  switchTab('resenas');
+}
+
+/* ========================= Flujo de agenda (5 pasos) =========================
+   1) Elegir servicio  2) Elegir día  3) Elegir hora  4) Datos del paciente  5) Pago + WhatsApp
+*/
+let bk = { step:1, serviceId:null, date:null, time:null, cal:new Date(), name:'', reason:'', paymentMethod:null, promoPrice:null };
+
+function startBooking(serviceId, promoPrice){
+  bk = { step:1, serviceId:serviceId||null, date:null, time:null, cal:new Date(), name:'', reason:'', paymentMethod:null, promoPrice:promoPrice||null };
+  openModal('modal-booking');
+  renderBookingStep();
+}
+function setStepDots(){
+  document.querySelectorAll('#bk-steps .step-dot').forEach(d=>d.classList.toggle('on', Number(d.dataset.step)<=bk.step));
+  document.getElementById('bk-back').classList.toggle('hide', bk.step===1);
+}
+function bookingBack(){
+  if(bk.step===3 && bk.serviceId===null){ bk.step=1; } else { bk.step = Math.max(1, bk.step-1); }
+  renderBookingStep();
+}
+function bookingNext(){ bk.step++; renderBookingStep(); }
+
+function renderBookingStep(){
+  setStepDots();
+  const c = document.getElementById('bk-content');
+  if(bk.step===1){ c.innerHTML = stepServiceHTML(); return; }
+  if(bk.step===2){ c.innerHTML = stepCalendarHTML(); renderCalendarGrid(); return; }
+  if(bk.step===3){ c.innerHTML = stepTimeHTML(); renderTimeSlots(); return; }
+  if(bk.step===4){ c.innerHTML = stepFormHTML(); return; }
+  if(bk.step===5){ c.innerHTML = stepPaymentHTML(); renderPaymentSection(); return; }
+}
+
+function stepServiceHTML(){
+  const bookable = SERVICES.filter(s=>!s.status || s.status==='activo');
+  return `
+    <h3 class="font-display font-semibold text-base mb-3">¿Qué servicio necesitas?</h3>
+    <div class="space-y-2">
+      ${bookable.map(s=>`
+        <button onclick="pickService(${s.id})" class="w-full flex items-center justify-between p-3 rounded-xl border ${bk.serviceId===s.id?'border-teal-600 bg-teal-50':'border-slate-200'} text-left">
+          <span><span class="text-sm font-semibold block">${s.name}</span><span class="text-xs" style="color:var(--ink-600)">${money(s.price)} · ${s.duration} min</span></span>
+          <i class="fa-solid fa-chevron-right text-xs" style="color:var(--ink-400)"></i>
+        </button>
+      `).join('')}
+    </div>`;
+}
+function pickService(id){ if(id!==bk.serviceId) bk.promoPrice=null; bk.serviceId=id; bookingNext(); }
+
+function stepCalendarHTML(){
+  return `
+    <h3 class="font-display font-semibold text-base mb-3">Elige un día</h3>
+    <div class="flex items-center justify-between mb-2">
+      <button onclick="calMonth(-1)" class="w-8 h-8 rounded-full hover:bg-slate-100" aria-label="Mes anterior"><i class="fa-solid fa-chevron-left text-xs"></i></button>
+      <p id="cal-label" class="font-semibold text-sm"></p>
+      <button onclick="calMonth(1)" class="w-8 h-8 rounded-full hover:bg-slate-100" aria-label="Mes siguiente"><i class="fa-solid fa-chevron-right text-xs"></i></button>
+    </div>
+    <div class="grid grid-cols-7 gap-1 text-center text-[11px] font-semibold mb-1" style="color:var(--ink-400)">
+      <div>D</div><div>L</div><div>M</div><div>M</div><div>J</div><div>V</div><div>S</div>
+    </div>
+    <div id="cal-grid" class="grid grid-cols-7 gap-1"></div>
+    <p class="text-xs text-center mt-3" style="color:var(--ink-400)">Solo se muestran los días con horarios disponibles.</p>`;
+}
+function calMonth(delta){ bk.cal.setMonth(bk.cal.getMonth()+delta); renderCalendarGrid(); }
+function renderCalendarGrid(){
+  const cal = bk.cal;
+  const label = cal.toLocaleDateString('es-ES', {month:'long', year:'numeric'});
+  document.getElementById('cal-label').textContent = label.charAt(0).toUpperCase()+label.slice(1);
+  const grid = document.getElementById('cal-grid');
+  grid.innerHTML='';
+  const year = cal.getFullYear(), month = cal.getMonth();
+  const first = new Date(year, month, 1);
+  const daysInMonth = new Date(year, month+1, 0).getDate();
+  const today = new Date(); today.setHours(0,0,0,0);
+  for(let i=0;i<first.getDay();i++){ grid.innerHTML += `<div></div>`; }
+  for(let d=1; d<=daysInMonth; d++){
+    const date = new Date(year, month, d);
+    const key = date.toISOString().slice(0,10);
+    const isPast = date < today;
+    const service = SERVICES.find(s=>s.id===bk.serviceId);
+    const duration = service ? service.duration : 30;
+    const daySlots = daySlotsWithStatus(key, date, duration);
+    const full = daySlots.length===0 || daySlots.every(sl=>!sl.available);
+    let cls = 'day-cell ';
+    if(isPast || full) cls += 'past';
+    else cls += 'avail';
+    if(bk.date===key) cls += ' picked';
+    const clickable = !(isPast||full);
+    grid.innerHTML += `<div class="${cls}" ${clickable?`onclick="pickDate('${key}')"`:''}>${d}</div>`;
+  }
+}
+function pickDate(key){ bk.date=key; bk.time=null; bookingNext(); }
+
+function stepTimeHTML(){
+  const d = new Date(bk.date+'T00:00:00');
+  const nice = d.toLocaleDateString('es-ES', {weekday:'long', day:'numeric', month:'long'});
+  const service = SERVICES.find(s=>s.id===bk.serviceId);
+  return `
+    <h3 class="font-display font-semibold text-base mb-1">Elige una hora</h3>
+    <p class="text-xs mb-1" style="color:var(--ink-600)">${nice.charAt(0).toUpperCase()+nice.slice(1)}</p>
+    <p class="text-xs mb-3" style="color:var(--ink-400)">Duración estimada: ${service.duration} min</p>
+    <div id="time-grid" class="grid grid-cols-3 gap-2"></div>`;
+}
+function renderTimeSlots(){
+  const d = new Date(bk.date+'T00:00:00');
+  const service = SERVICES.find(s=>s.id===bk.serviceId);
+  const daySlots = daySlotsWithStatus(bk.date, d, service.duration);
+  const grid = document.getElementById('time-grid');
+  if(daySlots.length===0){
+    grid.innerHTML = `<p class="col-span-3 text-center text-xs py-4" style="color:var(--ink-400)">No hay horarios disponibles para este servicio en este día.</p>`;
+    return;
+  }
+  grid.innerHTML = daySlots.map(({time:t, available})=>{
+    const isPicked = bk.time===t;
+    let cls = 'time-slot ' + (!available?'taken':(isPicked?'picked':''));
+    return `<div class="${cls}" ${available?`onclick="pickTime('${t}')"`:''}>${to12h(t)}</div>`;
+  }).join('');
+}
+function pickTime(t){ bk.time=t; bookingNext(); }
+
+function stepFormHTML(){
+  return `
+    <h3 class="font-display font-semibold text-base mb-3">Tus datos</h3>
+    <div class="space-y-3">
+      <input id="f-name" class="field" placeholder="Nombre y apellido" value="${bk.name}">
+      <textarea id="f-reason" class="field" rows="2" placeholder="Motivo de la consulta">${bk.reason}</textarea>
+    </div>
+    <p id="f-error" class="text-xs text-rose-500 mt-2 hide">Escribe tu nombre y apellido para continuar.</p>
+    <button onclick="submitForm()" class="w-full mt-4 py-3 rounded-xl font-semibold text-sm text-white" style="background:var(--teal-700)">Continuar</button>`;
+}
+function submitForm(){
+  bk.name = document.getElementById('f-name').value.trim();
+  bk.reason = document.getElementById('f-reason').value.trim();
+  if(!bk.name){ document.getElementById('f-error').classList.remove('hide'); return; }
+  bookingNext();
+}
+
+function stepPaymentHTML(){
+  const s = SERVICES.find(x=>x.id===bk.serviceId);
+  const price = bk.promoPrice || s.price;
+  const d = new Date(bk.date+'T00:00:00');
+  const nice = d.toLocaleDateString('es-ES', {weekday:'long', day:'numeric', month:'long'});
+  return `
+    <h3 class="font-display font-semibold text-base mb-3">Confirma y paga tu cita</h3>
+    <div class="bg-slate-50 rounded-xl p-4 text-sm space-y-1.5 mb-4">
+      <p><span style="color:var(--ink-600)">Servicio:</span> <b>${s.name}</b>${bk.promoPrice?' <span class="text-[10px] font-bold text-rose-500">PROMO</span>':''}</p>
+      <p><span style="color:var(--ink-600)">Fecha:</span> <b>${nice}</b> a las <b>${to12h(bk.time)}</b></p>
+      <p><span style="color:var(--ink-600)">Paciente:</span> <b>${bk.name}</b></p>
+      <p class="pt-1.5 mt-1.5 border-t border-slate-200"><span style="color:var(--ink-600)">Valor a cancelar:</span> <b style="color:var(--teal-700)">${money(price)}</b></p>
+    </div>
+    <div id="payment-section"></div>`;
+}
+
+function pickPayment(id){ bk.paymentMethod=id; renderPaymentSection(); }
+
+function copyPayValue(text, btn){
+  const done = ()=>{ const orig = btn.textContent; btn.textContent='¡Copiado!'; btn.disabled=true; setTimeout(()=>{btn.textContent=orig; btn.disabled=false;}, 1500); };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(done).catch(()=>alert('No se pudo copiar. Dato: '+text));
+  } else { alert('Copia manualmente este dato: '+text); }
+}
+
+function renderPaymentSection(){
+  const wrap = document.getElementById('payment-section');
+  if(!wrap) return;
+  const chosen = PAYMENT_METHODS.find(p=>p.id===bk.paymentMethod);
+  const cash = chosen && chosen.cash;
+
+  wrap.innerHTML = `
+    <p class="text-xs font-semibold mb-2" style="color:var(--ink-600)">Elige tu medio de pago</p>
+    <div class="grid grid-cols-4 gap-2 mb-3">
+      ${PAYMENT_METHODS.map(p=>`
+        <button onclick="pickPayment('${p.id}')" class="flex flex-col items-center gap-1.5 py-2.5 rounded-xl border ${bk.paymentMethod===p.id?'border-teal-600 bg-teal-50':'border-slate-200'}">
+          <span class="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm" style="background:${p.color}"><i class="fa-solid ${p.icon}"></i></span>
+          <span class="text-[10px] font-semibold text-center leading-tight" style="color:var(--ink-600)">${p.label}</span>
+        </button>
+      `).join('')}
+    </div>
+    ${chosen ? (cash ? `
+      <div class="bg-slate-50 rounded-xl p-3 text-xs" style="color:var(--ink-600)">Pagarás en efectivo directamente en el consultorio el día de tu cita.</div>
+    ` : `
+      <div class="bg-slate-50 rounded-xl p-3 flex items-center justify-between gap-3">
+        <div class="min-w-0"><p class="text-xs" style="color:var(--ink-600)">${chosen.sublabel}</p><p class="text-sm font-bold truncate">${chosen.value}</p></div>
+        <button onclick="copyPayValue('${chosen.value}', this)" class="text-xs font-semibold px-3 py-2 rounded-lg text-white flex-shrink-0" style="background:var(--navy-800)">Copiar</button>
+      </div>
+    `) : ''}
+    <div class="bg-amber-50 border border-amber-100 rounded-xl p-3 text-xs text-amber-800 leading-relaxed mt-3">
+      <i class="fa-solid fa-circle-info mr-1"></i>
+      ${cash
+        ? 'Al elegir pago en efectivo, tu cita queda sujeta a confirmación del consultorio, te confirmaremos por mensaje la aprobación en un plazo no mayor a 30 minutos. También puedes consignar el valor de la consulta en un corresponsal con nuestros datos bancarios y enviarnos foto del comprobante de pago por mensaje de WhatsApp.'
+        : 'Copia el dato, realiza el pago desde tu app y envía el <b>comprobante por este mismo chat de WhatsApp</b>. Tienes <b>30 minutos</b> para hacerlo o el horario se liberará automáticamente.'}
+    </div>
+    <button onclick="acceptAndSendWhatsapp()" ${chosen?'':'disabled'} class="w-full mt-4 py-3 rounded-xl font-semibold text-sm text-white flex items-center justify-center gap-2 disabled:opacity-40" style="background:${cash?'var(--teal-700)':'#25D366'}">
+      <i class="fa-brands fa-whatsapp"></i>${cash ? 'Aceptar y agendar (pago en efectivo)' : 'Aceptar y enviar comprobante'}
+    </button>
+    <button onclick="bookingBack()" class="w-full mt-2 py-3 rounded-xl font-semibold text-sm border border-slate-200">Volver</button>`;
+}
+
+function acceptAndSendWhatsapp(){
+  const s = SERVICES.find(x=>x.id===bk.serviceId);
+  const price = bk.promoPrice || s.price;
+  const d = new Date(bk.date+'T00:00:00');
+  const nice = d.toLocaleDateString('es-ES', {weekday:'long', day:'numeric', month:'long'});
+  const chosen = PAYMENT_METHODS.find(p=>p.id===bk.paymentMethod);
+  const cash = chosen && chosen.cash;
+  const apptNumber = nextApptNumber();
+  const lastLine = cash
+    ? 'Pagaré en efectivo el día de la cita. Quedo atento(a) a la confirmación.'
+    : 'Adjunto el comprobante de pago para confirmar mi cita.';
+  const msg = encodeURIComponent(
+`Hola ${CLINIC.name}, quiero agendar una cita.
+
+*Consulta Nro:* ${apptNumber}
+
+*Cliente:* ${bk.name}
+*Servicio:* ${s.name}${bk.promoPrice?' (promoción)':''} — ${money(price)}
+*Motivo de consulta:* ${bk.reason||'-'}
+*Fecha y hora:* ${nice}, ${to12h(bk.time)}
+*Método de pago:* ${chosen.label}
+
+*Observación:* ${lastLine}`
+  );
+
+  const expiresAt = Date.now() + 30*60*1000;
+
+  // Marca el horario como ocupado (pendiente de validación), con su duración real y hora de expiración
+  if(!OCCUPIED[bk.date]) OCCUPIED[bk.date]=[];
+  OCCUPIED[bk.date].push({time: bk.time, duration: s.duration, status:'pendiente', expiresAt});
+
+  const appt = {...bk, id: Date.now(), number: apptNumber, status:'pendiente', createdAt: Date.now(), expiresAt};
+  myAppointments.push(appt);
+  updateApptBadge();
+  scheduleSlotExpiry(appt);
+
+  window.open(`https://wa.me/${CLINIC.whatsapp}?text=${msg}`, '_blank');
+  showPendingScreen(appt);
+}
+
+// Si nadie confirma la cita (ni el pago ni la revisión del consultorio) dentro de los 30 minutos, el espacio se libera solo
+function scheduleSlotExpiry(appt){
+  setTimeout(()=>{
+    const list = OCCUPIED[appt.date];
+    if(list){
+      const idx = list.findIndex(o=>o.time===appt.time && o.status==='pendiente');
+      if(idx>-1) list.splice(idx,1);
+    }
+    const a = myAppointments.find(x=>x.id===appt.id);
+    if(a && a.status==='pendiente'){ a.status='expirada'; updateApptBadge(); }
+  }, 30*60*1000);
+}
+
+function showPendingScreen(appt){
+  const chosen = PAYMENT_METHODS.find(p=>p.id===appt.paymentMethod);
+  const cash = chosen && chosen.cash;
+  const c = document.getElementById('bk-content');
+  document.getElementById('bk-back').classList.add('hide');
+  c.innerHTML = `
+    <div class="text-center py-4">
+      <div class="w-16 h-16 rounded-full bg-amber-50 text-amber-500 flex items-center justify-center mx-auto text-2xl"><i class="fa-regular fa-clock"></i></div>
+      <h3 class="font-display font-semibold text-base mt-3">Cita pendiente de validar</h3>
+      <p class="text-xs mt-1" style="color:var(--ink-400)">Consulta Nro. ${appt.number}</p>
+      <p class="text-sm mt-2" style="color:var(--ink-600)">${cash
+        ? 'Enviamos tu solicitud por WhatsApp. El consultorio revisará tu caso y te confirmará (o no) la cita por ese mismo medio.'
+        : 'Enviamos tu solicitud por WhatsApp. En cuanto validemos tu comprobante, tu cita quedará confirmada.'}</p>
+      ${cash ? '' : `<div class="mt-4 bg-slate-50 rounded-xl p-3 text-sm font-semibold" id="countdown-${appt.id}">Tiempo restante: 30:00</div>`}
+      <button onclick="startBooking()" class="w-full mt-5 py-3 rounded-xl font-semibold text-sm border border-slate-200"><i class="fa-solid fa-plus mr-1.5"></i>Agendar otro servicio</button>
+      <button onclick="closeModal('modal-booking')" class="w-full mt-2 py-3 rounded-xl font-semibold text-sm text-white" style="background:var(--navy-800)">Listo</button>
+    </div>`;
+  if(!cash) startCountdown(appt.id, 30*60);
+}
+function startCountdown(id, seconds){
+  let remaining = seconds;
+  const el = document.getElementById(`countdown-${id}`);
+  const timer = setInterval(()=>{
+    remaining--;
+    const m = String(Math.floor(remaining/60)).padStart(2,'0');
+    const s = String(remaining%60).padStart(2,'0');
+    if(el) el.textContent = `Tiempo restante: ${m}:${s}`;
+    if(remaining<=0){ clearInterval(timer); if(el) el.textContent = 'Tiempo agotado'; }
+  },1000);
+}
+
+function updateApptBadge(){
+  const badge = document.getElementById('appt-count-badge');
+  const active = myAppointments.filter(a=>a.status==='pendiente'||a.status==='confirmada').length;
+  badge.textContent = active;
+  badge.classList.toggle('hide', active===0);
+}
+function openAppointmentsPanel(){
+  const list = document.getElementById('appointments-list');
+  if(myAppointments.length===0){
+    list.innerHTML = `<p class="text-sm text-center py-6" style="color:var(--ink-400)">Todavía no tienes citas agendadas.</p>`;
+  } else {
+    list.innerHTML = myAppointments.slice().reverse().map(a=>{
+      const s = SERVICES.find(x=>x.id===a.serviceId);
+      const d = new Date(a.date+'T00:00:00');
+      const nice = d.toLocaleDateString('es-ES', {day:'numeric', month:'short'});
+      const badge = a.status==='pendiente' ? '<span class="text-amber-600 bg-amber-50 text-[11px] font-semibold px-2 py-0.5 rounded-full">Pendiente</span>'
+        : a.status==='confirmada' ? '<span class="text-emerald-600 bg-emerald-50 text-[11px] font-semibold px-2 py-0.5 rounded-full">Confirmada</span>'
+        : '<span class="text-rose-500 bg-rose-50 text-[11px] font-semibold px-2 py-0.5 rounded-full">Expirada</span>';
+      return `<div class="bg-white border border-slate-100 rounded-xl p-3 flex items-center justify-between shadow-sm">
+        <div><p class="text-sm font-semibold">${s.name}</p><p class="text-xs" style="color:var(--ink-600)">${nice} · ${to12h(a.time)} · Nro. ${a.number}</p></div>
+        ${badge}
+      </div>`;
+    }).join('');
+  }
+  openModal('modal-appointments');
+}
+
+/* ========================= Agenda del consultorio (vista libre, sin elegir servicio) ========================= */
+let agendaCal = new Date();
+let agendaDate = null;
+
+function openAgenda(){
+  agendaCal = new Date();
+  agendaDate = null;
+  document.getElementById('agenda-timeline').innerHTML = `<p class="text-xs text-center py-6" style="color:var(--ink-400)">Elige un día para ver la agenda.</p>`;
+  renderAgendaCalGrid();
+  openModal('modal-agenda');
+}
+function agendaCalMonth(delta){ agendaCal.setMonth(agendaCal.getMonth()+delta); renderAgendaCalGrid(); }
+function renderAgendaCalGrid(){
+  const label = agendaCal.toLocaleDateString('es-ES', {month:'long', year:'numeric'});
+  document.getElementById('agenda-cal-label').textContent = label.charAt(0).toUpperCase()+label.slice(1);
+  const grid = document.getElementById('agenda-cal-grid');
+  grid.innerHTML='';
+  const year = agendaCal.getFullYear(), month = agendaCal.getMonth();
+  const first = new Date(year, month, 1);
+  const daysInMonth = new Date(year, month+1, 0).getDate();
+  const today = new Date(); today.setHours(0,0,0,0);
+  for(let i=0;i<first.getDay();i++){ grid.innerHTML += `<div></div>`; }
+  for(let d=1; d<=daysInMonth; d++){
+    const date = new Date(year, month, d);
+    const key = date.toISOString().slice(0,10);
+    const isPast = date < today;
+    const isSunday = date.getDay()===0;
+    let cls = 'day-cell ' + (isPast||isSunday ? 'past' : 'avail');
+    if(agendaDate===key) cls += ' picked';
+    const clickable = !(isPast||isSunday);
+    grid.innerHTML += `<div class="${cls}" ${clickable?`onclick="pickAgendaDate('${key}')"`:''}>${d}</div>`;
+  }
+}
+function pickAgendaDate(key){
+  agendaDate = key;
+  renderAgendaCalGrid();
+  renderAgendaTimeline(key, new Date(key+'T00:00:00'));
+}
+function renderAgendaTimeline(dateKey, dateObj){
+  const wrap = document.getElementById('agenda-timeline');
+  const sched = getDaySchedule(dateObj);
+  if(!sched){ wrap.innerHTML = `<p class="text-xs text-center py-6" style="color:var(--ink-400)">El consultorio no atiende este día.</p>`; return; }
+  const openMin = timeToMin(sched.open), closeMin = timeToMin(sched.close);
+  const occ = OCCUPIED[dateKey] || [];
+  let rows = '';
+  for(let t=openMin; t<closeMin; t+=SLOT_GRANULARITY){
+    const match = occ.find(o=>{
+      const oStart = timeToMin(o.time), oEnd = oStart + o.duration + ADMIN_SETTINGS.cleaningMinutes;
+      return t>=oStart && t<oEnd;
+    });
+    if(!match){
+      rows += `<div class="flex items-center justify-between p-3 rounded-xl" style="background:#ecfdf5"><span class="text-sm font-semibold" style="color:#065f46">${to12h(minToTime(t))}</span><span class="text-xs font-semibold" style="color:#059669">Disponible</span></div>`;
+    } else if(match.status==='confirmada'){
+      rows += `<div class="flex items-center justify-between p-3 rounded-xl opacity-70" style="background:#f1f5f9"><span class="text-sm font-semibold" style="color:var(--ink-600)"><i class="fa-solid fa-lock mr-1.5"></i>${to12h(minToTime(t))}</span><span class="text-xs font-semibold" style="color:var(--ink-600)">Agendado</span></div>`;
+    } else {
+      const remainMin = Math.max(0, Math.round((match.expiresAt - Date.now())/60000));
+      rows += `<div onclick="alert('Este horario está en proceso de agendamiento. Si el cliente no confirma el pago, quedará disponible en aproximadamente ${remainMin} minuto(s).')" class="flex items-center justify-between p-3 rounded-xl cursor-pointer" style="background:#fffbeb;border:1px solid #fde68a"><span class="text-sm font-semibold" style="color:#92400e">${to12h(minToTime(t))}</span><span class="text-xs font-semibold text-right" style="color:#b45309"><i class="fa-regular fa-clock mr-1"></i>En proceso · libera en ${remainMin} min</span></div>`;
+    }
+  }
+  wrap.innerHTML = rows || `<p class="text-xs text-center py-6" style="color:var(--ink-400)">Sin información para este día.</p>`;
+}
+
+/* ========================= Init ========================= */
+function renderOpenStatus(){
+  const now = new Date();
+  const sched = getDaySchedule(now);
+  const nowMin = now.getHours()*60 + now.getMinutes();
+  const isOpen = sched && nowMin>=timeToMin(sched.open) && nowMin<timeToMin(sched.close);
+
+  const dot = document.getElementById('open-dot');
+  const text = document.getElementById('open-text');
+  const wrap = document.getElementById('open-status');
+  if(!dot||!text||!wrap) return;
+  if(isOpen){
+    dot.style.background = '#10b981';
+    text.textContent = 'Abierto ahora';
+    wrap.style.color = '#0f766e';
+  } else {
+    dot.style.background = '#ef4444';
+    text.textContent = 'Cerrado ahora';
+    wrap.style.color = '#dc2626';
+  }
+
+  const el = document.getElementById('closes-in');
+  if(!el) return;
+  if(!sched){ el.textContent = 'Cerrado hoy · abrimos mañana'; return; }
+  if(isOpen){
+    const diffMs = (timeToMin(sched.close)-nowMin)*60000;
+    const h = Math.floor(diffMs/3600000), m = Math.floor((diffMs%3600000)/60000);
+    el.textContent = `Cierra en ${h>0?h+'h ':''}${m}m`;
+  } else if(nowMin < timeToMin(sched.open)){
+    el.textContent = `Abre hoy a las ${to12h(sched.open)}`;
+  } else {
+    el.textContent = 'Cerrado por hoy';
+  }
+}
+renderOpenStatus();
+setInterval(renderOpenStatus, 60000);
+
+renderServices();
+renderPromo();
+renderReviews();
+document.getElementById('clinic-address').textContent = CLINIC.address;
+</script>
+</body>
+</html>
