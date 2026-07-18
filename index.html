@@ -489,8 +489,9 @@ function saveContact(){
   const vcard = `BEGIN:VCARD\nVERSION:3.0\nFN:${CLINIC.name}\nORG:${CLINIC.name}\nTEL;TYPE=WORK,VOICE:${CLINIC.phone}\nADR;TYPE=WORK:;;${CLINIC.address};;;;\nEND:VCARD`;
   const blob = new Blob([vcard], {type:'text/vcard'});
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = `${CLINIC.name}.vcf`; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  // Navegamos directo al archivo (sin forzar descarga) para que el celular lo reconozca
+  // como una tarjeta de contacto y abra la pantalla de "Crear contacto" ya rellenada.
+  window.location.href = url;
 }
 
 function openQR(){
