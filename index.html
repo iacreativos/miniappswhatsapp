@@ -41,6 +41,8 @@ h1,h2,h3,h4,.font-display{font-family:'Poppins',sans-serif}
 .modal-panel{background:#fff;width:100%;max-width:430px;max-height:88vh;overflow-y:auto;border-radius:24px 24px 0 0;transform:translateY(30px);transition:transform .3s ease;padding-bottom:env(safe-area-inset-bottom)}
 .modal-overlay.active .modal-panel{transform:translateY(0)}
 .day-cell{aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;border-radius:10px;font-size:13px;cursor:pointer;font-weight:500}
+#cal-grid.grid{gap:5px}
+#cal-grid .day-cell{font-size:17px;font-weight:600;border-radius:12px}
 .day-cell.avail{background:#f0fdfa;color:var(--teal-700)}
 .day-cell.avail:hover{background:#ccfbf1}
 .day-cell.taken{color:var(--ink-400);cursor:not-allowed}
@@ -95,7 +97,7 @@ h1,h2,h3,h4,.font-display{font-family:'Poppins',sans-serif}
 </div>
 
 <!-- ===== WELCOME BANNER ===== -->
-<div class="px-5 mt-4">
+<div id="sec-welcome" class="px-5 mt-4">
   <div class="rounded-2xl overflow-hidden relative" style="background:linear-gradient(120deg,var(--navy-800),var(--teal-700));min-height:130px">
     <div class="absolute inset-0 w-full h-full opacity-20" style="background:radial-gradient(circle at 30% 30%, #22d3ee, transparent 60%)"></div>
     <div class="relative p-5">
@@ -106,7 +108,7 @@ h1,h2,h3,h4,.font-display{font-family:'Poppins',sans-serif}
 </div>
 
 <!-- ===== QUICK ACTIONS ===== -->
-<div class="px-5 mt-4 grid grid-cols-4 gap-3 text-center">
+<div id="sec-quickactions" class="px-5 mt-4 grid grid-cols-4 gap-3 text-center">
   <button onclick="openWhatsappGeneral()" class="flex flex-col items-center gap-1.5">
     <span class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg"><i class="fa-brands fa-whatsapp"></i></span>
     <span class="text-[11px] font-medium" style="color:var(--ink-600)">WhatsApp</span>
@@ -127,7 +129,11 @@ h1,h2,h3,h4,.font-display{font-family:'Poppins',sans-serif}
 
 <!-- ===== PROMO SECTION ===== -->
 <section id="sec-promos" class="px-5 mt-6">
-  <h2 class="font-display font-semibold text-sm tracking-wide" style="color:var(--navy-800)">PROMOCIÓN DEL MES</h2>
+  <div class="flex items-center gap-3">
+    <span class="h-px bg-slate-200 flex-1"></span>
+    <h2 class="font-display font-semibold text-sm tracking-wide" style="color:var(--navy-800)">PROMOCIÓN DEL MES</h2>
+    <span class="h-px bg-slate-200 flex-1"></span>
+  </div>
   <div id="promo-card" class="mt-3"></div>
 </section>
 
@@ -143,14 +149,22 @@ h1,h2,h3,h4,.font-display{font-family:'Poppins',sans-serif}
 
 <!-- ===== REVIEWS ===== -->
 <section id="sec-resenas" class="px-5 mt-7 hide">
-  <h2 class="font-display font-semibold text-sm tracking-wide" style="color:var(--navy-800)">RESEÑAS DE PACIENTES</h2>
+  <div class="flex items-center gap-3">
+    <span class="h-px bg-slate-200 flex-1"></span>
+    <h2 class="font-display font-semibold text-sm tracking-wide" style="color:var(--navy-800)">RESEÑAS DE PACIENTES</h2>
+    <span class="h-px bg-slate-200 flex-1"></span>
+  </div>
   <button onclick="openWriteReview()" class="w-full mt-3 py-2.5 rounded-xl border border-dashed text-sm font-semibold flex items-center justify-center gap-2" style="border-color:var(--teal-600);color:var(--teal-700)"><i class="fa-regular fa-star"></i>Escribir una reseña</button>
   <div class="mt-3 space-y-3" id="reviews-list"></div>
 </section>
 
 <!-- ===== CONTACTO ===== -->
 <section id="sec-contacto" class="px-5 mt-7 hide">
-  <h2 class="font-display font-semibold text-sm tracking-wide" style="color:var(--navy-800)">NUESTRAS REDES</h2>
+  <div class="flex items-center gap-3">
+    <span class="h-px bg-slate-200 flex-1"></span>
+    <h2 class="font-display font-semibold text-sm tracking-wide" style="color:var(--navy-800)">NUESTRAS REDES</h2>
+    <span class="h-px bg-slate-200 flex-1"></span>
+  </div>
   <div class="mt-3 grid grid-cols-2 gap-3">
     <a href="https://instagram.com/tu_usuario" target="_blank" class="flex items-center gap-3 bg-white border border-slate-100 rounded-xl p-3 shadow-sm">
       <span class="w-9 h-9 rounded-full bg-pink-50 text-pink-600 flex items-center justify-center"><i class="fa-brands fa-instagram"></i></span>
@@ -428,6 +442,8 @@ function switchTab(tab){
   const all = ['sec-promos','sec-servicios','sec-resenas','sec-contacto'];
   all.forEach(id=>document.getElementById(id).classList.add('hide'));
   (sections[tab]||[]).forEach(id=>document.getElementById(id).classList.remove('hide'));
+  document.getElementById('sec-welcome').classList.toggle('hide', tab!=='inicio');
+  document.getElementById('sec-quickactions').classList.toggle('hide', tab!=='inicio');
   document.getElementById('app').scrollIntoView({behavior:'smooth'});
 }
 
@@ -688,10 +704,12 @@ function stepCalendarHTML(){
       <p id="cal-label" class="font-semibold text-sm"></p>
       <button onclick="calMonth(1)" class="w-8 h-8 rounded-full hover:bg-slate-100" aria-label="Mes siguiente"><i class="fa-solid fa-chevron-right text-xs"></i></button>
     </div>
-    <div class="grid grid-cols-7 gap-1 text-center text-[11px] font-semibold mb-1" style="color:var(--ink-400)">
-      <div>D</div><div>L</div><div>M</div><div>M</div><div>J</div><div>V</div><div>S</div>
+    <div class="-mx-3">
+      <div class="grid grid-cols-7 gap-1 text-center text-[11px] font-semibold mb-1" style="color:var(--ink-400)">
+        <div>D</div><div>L</div><div>M</div><div>M</div><div>J</div><div>V</div><div>S</div>
+      </div>
+      <div id="cal-grid" class="grid grid-cols-7 gap-1"></div>
     </div>
-    <div id="cal-grid" class="grid grid-cols-7 gap-1"></div>
     <p class="text-xs text-center mt-3" style="color:var(--ink-400)">Solo se muestran los días con horarios disponibles.</p>`;
 }
 function calMonth(delta){ bk.cal.setMonth(bk.cal.getMonth()+delta); renderCalendarGrid(); }
