@@ -3,423 +3,688 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tarjeta de Presentación Digital - Dra. Ana Pérez</title>
-    <!-- Tailwind CSS para estilos rápidos y modernos -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts para una tipografía elegante -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <title>Tarjeta de Presentación Digital - Dra. Sofía Rodríguez</title>
+    <!-- Carga de Tailwind CSS --><script src="https://cdn.tailwindcss.com"></script>
+    <!-- Carga de Google Fonts --><link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome para íconos realistas -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- Alpine.js para interactividad ligera (modal) -->
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-    <style>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Carga de Font Awesome para iconos --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Estilos personalizados --><style>
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Montserrat', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-color: #f0f4f8; /* Un gris azulado muy claro para el fondo */
         }
-        .icon-shadow {
-            box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.1);
+        /* Contenedor principal de la tarjeta */
+        .card-container {
+            width: 100%; /* Ocupa el ancho completo por defecto */
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: #ffffff;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
         }
-        .interactive-element {
-            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+
+        /* Media Query para pantallas más grandes (tablets, desktops) */
+        @media (min-width: 450px) {
+            .card-container {
+                max-width: 420px; /* Ancho máximo en pantallas grandes */
+                margin: 2rem auto; /* Centrado y con margen vertical */
+                min-height: calc(100vh - 4rem);
+                border-radius: 24px; /* Bordes redondeados */
+                overflow: hidden; /* Asegura que el contenido respete los bordes */
+            }
         }
-        .interactive-element:hover {
-            transform: translateY(-4px) scale(1.05);
-            box-shadow: 0 8px 25px 0 rgba(0, 0, 0, 0.15);
+
+        /* Imagen de fondo principal */
+        .main-bg {
+            background-image: url('https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+            background-size: cover;
+            background-position: center;
+            height: 200px;
         }
-        /* Animaciones */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* Sección de contenido principal */
+        .content-section {
+            background: linear-gradient(180deg, #005f73 0%, #0a9396 100%);
+            margin-top: -60px;
+            border-top-left-radius: 50px;
+            border-top-right-radius: 50px;
+            position: relative;
+            padding-bottom: 2rem;
+            flex-grow: 1;
         }
-        .fade-in {
-            animation: fadeIn 0.8s ease-out forwards;
+        /* Contenedor para la foto de perfil y el ícono de verificación */
+        .profile-container {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin-top: -105px;
         }
-        /* Staggered animation for icons */
-        .icon-animate {
+        /* Estilo de la foto de perfil */
+        .profile-pic {
+            width: 100%;
+            height: 100%;
+            border: 5px solid #0a9396;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        /* Ícono de verificación */
+        .verification-badge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: #3b82f6; /* Azul de Tailwind */
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
+        /* Estilo general para los botones de acción principal */
+        .action-btn {
+            background-color: #ee9b00;
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+        }
+        .action-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(238, 155, 0, 0.4);
+        }
+        /* Estilo para los botones de íconos sociales */
+        .social-btn {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .social-btn:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+        /* Footer */
+        .footer-banner {
+            background-color: #e9d8a6;
+            color: #001219;
+        }
+
+        /* --- ESTILOS PROFESIONALES PARA POPUPS --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 37, 46, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
             opacity: 0;
-            animation: fadeIn 0.5s ease-out forwards;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            backdrop-filter: blur(5px);
         }
-        /* Evita el scroll del body cuando el modal está abierto */
-        body.modal-open {
-            overflow: hidden;
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background: #ffffff;
+            border-radius: 20px;
+            max-width: 90%;
+            width: 500px;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            transform: scale(0.95) translateY(20px);
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            border: 5px solid #e9d8a6; /* Borde del popup aumentado */
+            opacity: 0;
+        }
+        .modal-overlay.active .modal-content {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+        .modal-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid #f0f4f8;
+            position: relative;
+        }
+        .modal-header-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-align: center;
+            color: #005f73;
+            max-width: calc(100% - 90px); /* Evita la superposición con el botón de cerrar */
+            margin: 0 auto; /* Centra el título con el nuevo max-width */
+        }
+        /* Franja decorativa para los títulos */
+        .modal-header-title::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 4px;
+            background-color: #ee9b00;
+            margin: 8px auto 0;
+            border-radius: 2px;
+        }
+        .modal-body {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+        .modal-close-btn {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            background: #f0f4f8;
+            color: #005f73;
+            border-radius: 99px;
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+            border: none;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        .modal-close-btn:hover {
+            background-color: #e9d8a6;
+            transform: rotate(90deg);
+        }
+
+        /* Estilos para el Calendario */
+        .calendar-day { transition: all 0.2s ease-in-out; }
+        .calendar-day:not(.disabled):hover {
+            background-color: #e9d8a6;
+            color: #001219;
+            transform: scale(1.1);
+        }
+        .calendar-day.disabled {
+            color: #cbd5e1;
+            cursor: not-allowed;
+            background-color: transparent;
+        }
+        .calendar-day.today {
+            background-color: #ee9b00;
+            color: white;
+            font-weight: bold;
+        }
+        .calendar-day.selected {
+            background-color: #005f73;
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(0,95,115,0.5);
+        }
+        .time-slot { transition: all 0.2s ease-in-out; border: 2px solid #f0f4f8; }
+        .time-slot:hover {
+            border-color: #e9d8a6;
+            background-color: #f0f4f8;
+        }
+        .time-slot.selected {
+            background-color: #005f73;
+            color: white;
+            border-color: #005f73;
+            font-weight: 600;
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-gray-50 to-gray-200">
+<body class="bg-gray-200">
 
-    <div class="w-full min-h-screen flex items-center justify-center md:p-4">
-        <div x-data="appData()" x-init="init()" x-watch="qrModal || servicesModal || scheduleModal || installModal || calendarModal || timePickerModal, value => { document.body.classList.toggle('modal-open', value) }" class="w-full h-screen overflow-y-auto md:h-auto md:max-w-sm bg-slate-50 md:shadow-2xl md:rounded-2xl md:overflow-hidden fade-in">
-
-            <!-- Sección del Banner Superior -->
-            <div class="relative h-44 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=2070&auto=format&fit=crop');">
-                <div class="absolute inset-0 bg-black bg-opacity-40"></div>
-            </div>
-
-            <!-- Sección de Foto de Perfil -->
-            <div class="flex justify-center -mt-20 z-10 relative">
-                <div class="relative">
-                    <img class="w-32 h-32 rounded-full border-4 border-white object-cover shadow-lg" src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=2070&auto=format&fit=crop" alt="Foto de perfil de la Dra. Ana Pérez" onerror="this.onerror=null;this.src='https://placehold.co/128x128/EFEFEF/333333?text=AP';">
-                    <div class="absolute bottom-1 right-1 bg-emerald-600 rounded-full w-8 h-8 flex items-center justify-center border-2 border-white">
-                        <i class="fa-solid fa-check text-white text-sm"></i>
+    <div class="card-container">
+        <!-- SECCIÓN DE IMAGEN SUPERIOR --><div class="main-bg"></div>
+        
+        <!-- SECCIÓN DE CONTENIDO PRINCIPAL --><div class="content-section">
+            <div class="flex flex-col items-center px-6 text-center">
+                <!-- Contenedor de Foto de Perfil y Badge --><div class="profile-container">
+                    <img src="https://i.postimg.cc/dtDX1zV3/Captura-de-pantalla-2025-10-08-003802.png" alt="Foto de perfil de la Dra. Sofía Rodríguez" class="profile-pic object-cover rounded-full">
+                    <div class="verification-badge">
+                        <i class="fas fa-check text-sm"></i>
                     </div>
                 </div>
-            </div>
-
-            <!-- Sección de Información -->
-            <div class="text-center px-6 pt-4 pb-2">
-                <h2 class="text-3xl font-bold text-gray-800">Dra. Ana Pérez</h2>
-                <p class="text-gray-500 font-medium">Nutrición Funcional</p>
-                <p class="text-sm text-emerald-600 mt-2 italic">Toca los íconos para interactuar</p>
-            </div>
-
-            <!-- Sección de Iconos Interactivos -->
-            <div class="px-6 pt-6 pb-4">
-                <div class="grid grid-cols-3 gap-y-6 gap-x-5">
-                     <!-- Llamar -->
-                    <a href="tel:+1234567890" class="flex flex-col items-center text-center group interactive-element icon-animate" style="animation-delay: 0.1s;" title="Llámame">
-                        <div class="w-16 h-16 rounded-full bg-gradient-to-br from-green-600 to-emerald-700 text-white flex items-center justify-center icon-shadow"><i class="fa-solid fa-phone fa-2x"></i></div>
-                        <p class="text-sm font-medium text-gray-600 mt-2">Llamar</p>
+                
+                <!-- Nombre y Profesión --><h1 class="text-3xl font-bold text-white mt-4 tracking-tight">Dra. Sofía Rodríguez</h1>
+                <p class="text-lg text-white opacity-80 mt-1">Nutricionista Profesional</p>
+                <p class="text-white opacity-90 mt-4 max-w-sm italic">Comprometida con tu bienestar a través de una alimentación consciente y saludable.</p>
+                
+                <!-- Botones Principales de Acción --><div class="flex flex-col sm:flex-row gap-4 w-full max-w-xs mx-auto mt-8">
+                    <div id="agendar-btn" class="action-btn flex-1 flex items-center justify-center gap-3 font-semibold py-3 rounded-full text-lg">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Agendar</span>
+                    </div>
+                    <a href="tel:+1234567890" class="action-btn flex-1 flex items-center justify-center gap-3 font-semibold py-3 rounded-full text-lg">
+                        <i class="fas fa-phone-alt"></i>
+                        <span>Llamar</span>
                     </a>
-                    <!-- Horario -->
-                    <div @click="scheduleModal = true" class="cursor-pointer flex flex-col items-center text-center group interactive-element icon-animate" style="animation-delay: 0.2s;" title="Ver Horario de Atención">
-                        <div class="w-16 h-16 rounded-full bg-gradient-to-br from-green-600 to-emerald-700 text-white flex items-center justify-center icon-shadow"><i class="fa-solid fa-clock fa-2x"></i></div>
-                        <p class="text-sm font-medium text-gray-600 mt-2">Horario</p>
+                </div>
+                
+                <p class="text-white opacity-80 mt-8 text-center">Toca los íconos para interactuar</p>
+
+                <!-- Íconos de Contacto y Redes Sociales --><div class="grid grid-cols-4 gap-3 w-full max-w-sm mx-auto mt-4">
+                    <div id="services-btn" class="social-btn flex flex-col justify-center items-center py-3 w-full h-20 rounded-2xl">
+                        <i class="fas fa-concierge-bell text-2xl"></i>
+                        <span class="text-xs mt-2 font-medium">Servicios</span>
                     </div>
-                    <!-- Servicios -->
-                    <div @click="servicesModal = true" class="cursor-pointer flex flex-col items-center text-center group interactive-element icon-animate" style="animation-delay: 0.3s;" title="Ver mis Servicios">
-                        <div class="w-16 h-16 rounded-full bg-gradient-to-br from-green-600 to-emerald-700 text-white flex items-center justify-center icon-shadow"><i class="fa-solid fa-concierge-bell fa-2x"></i></div>
-                        <p class="text-sm font-medium text-gray-600 mt-2">Servicios</p>
+                    <div id="horario-btn" class="social-btn flex flex-col justify-center items-center py-3 w-full h-20 rounded-2xl">
+                        <i class="fas fa-clock text-2xl"></i>
+                        <span class="text-xs mt-2 font-medium">Horario de atención</span>
                     </div>
-                    <!-- Facebook -->
-                    <a href="https://facebook.com" target="_blank" class="flex flex-col items-center text-center group interactive-element icon-animate" style="animation-delay: 0.4s;" title="Sígueme en Facebook">
-                        <div class="w-16 h-16 rounded-full bg-gradient-to-br from-green-600 to-emerald-700 text-white flex items-center justify-center icon-shadow"><i class="fa-brands fa-facebook-f fa-2x"></i></div>
-                        <p class="text-sm font-medium text-gray-600 mt-2">Facebook</p>
+                    <div id="qr-code-btn" class="social-btn flex flex-col justify-center items-center py-3 w-full h-20 rounded-2xl">
+                        <i class="fas fa-qrcode text-2xl"></i>
+                        <span class="text-xs mt-2 font-medium">Código QR</span>
+                    </div>
+                    <a href="https://maps.google.com/?q=Quito" target="_blank" class="social-btn flex flex-col justify-center items-center py-3 w-full h-20 rounded-2xl">
+                        <i class="fas fa-map-marker-alt text-2xl"></i>
+                        <span class="text-xs mt-2 font-medium">Ubicación</span>
                     </a>
-                    <!-- Instagram -->
-                    <a href="https://instagram.com" target="_blank" class="flex flex-col items-center text-center group interactive-element icon-animate" style="animation-delay: 0.5s;" title="Sígueme en Instagram">
-                        <div class="w-16 h-16 rounded-full bg-gradient-to-br from-green-600 to-emerald-700 text-white flex items-center justify-center icon-shadow"><i class="fa-brands fa-instagram fa-2x"></i></div>
-                        <p class="text-sm font-medium text-gray-600 mt-2">Instagram</p>
+                    <a href="https://www.facebook.com/" target="_blank" class="social-btn flex flex-col justify-center items-center py-3 w-full h-20 rounded-2xl">
+                        <i class="fab fa-facebook-f text-2xl"></i>
+                        <span class="text-xs mt-2 font-medium">Facebook</span>
                     </a>
-                    <!-- WhatsApp -->
-                    <a href="https://wa.me/1234567890" target="_blank" class="flex flex-col items-center text-center group interactive-element icon-animate" style="animation-delay: 0.6s;" title="Chatea por WhatsApp">
-                        <div class="w-16 h-16 rounded-full bg-gradient-to-br from-green-600 to-emerald-700 text-white flex items-center justify-center icon-shadow"><i class="fa-brands fa-whatsapp fa-2x"></i></div>
-                        <p class="text-sm font-medium text-gray-600 mt-2">WhatsApp</p>
+                    <a href="https://www.instagram.com/" target="_blank" class="social-btn flex flex-col justify-center items-center py-3 w-full h-20 rounded-2xl">
+                        <i class="fab fa-instagram text-2xl"></i>
+                        <span class="text-xs mt-2 font-medium">Instagram</span>
                     </a>
-                    <!-- Correo -->
-                    <a href="mailto:ana.perez@email.com" class="flex flex-col items-center text-center group interactive-element icon-animate" style="animation-delay: 0.7s;" title="Envíame un Correo">
-                        <div class="w-16 h-16 rounded-full bg-gradient-to-br from-green-600 to-emerald-700 text-white flex items-center justify-center icon-shadow"><i class="fa-solid fa-envelope fa-2x"></i></div>
-                        <p class="text-sm font-medium text-gray-600 mt-2">Correo</p>
+                    <a href="https://wa.me/1234567890" target="_blank" class="social-btn flex flex-col justify-center items-center py-3 w-full h-20 rounded-2xl">
+                        <i class="fab fa-whatsapp text-2xl"></i>
+                        <span class="text-xs mt-2 font-medium">WhatsApp</span>
                     </a>
-                    <!-- Ubicación -->
-                    <a href="https://maps.google.com" target="_blank" class="flex flex-col items-center text-center group interactive-element icon-animate" style="animation-delay: 0.8s;" title="Ver mi Ubicación">
-                        <div class="w-16 h-16 rounded-full bg-gradient-to-br from-green-600 to-emerald-700 text-white flex items-center justify-center icon-shadow"><i class="fa-solid fa-location-dot fa-2x"></i></div>
-                        <p class="text-sm font-medium text-gray-600 mt-2">Ubicación</p>
-                    </a>
-                    <!-- Instalar -->
-                    <div @click="installModal = true" class="cursor-pointer flex flex-col items-center text-center group interactive-element icon-animate" style="animation-delay: 0.9s;" title="Cómo Instalar en tu Dispositivo">
-                        <div class="w-16 h-16 rounded-full bg-gradient-to-br from-green-600 to-emerald-700 text-white flex items-center justify-center icon-shadow"><i class="fa-solid fa-mobile-screen-button fa-2x"></i></div>
-                        <p class="text-sm font-medium text-gray-600 mt-2">Instalar</p>
+                    <div id="save-contact-btn" class="social-btn flex flex-col justify-center items-center py-3 w-full h-20 rounded-2xl">
+                        <i class="fas fa-save text-2xl"></i>
+                        <span class="text-xs mt-2 font-medium">Guardar Contacto</span>
                     </div>
                 </div>
-            </div>
 
-            <!-- Botones de Acción -->
-            <div class="px-6 py-6 space-y-4">
-                 <button @click="calendarModal = true" class="block w-full bg-gradient-to-r from-emerald-700 to-green-800 hover:from-emerald-800 hover:to-green-900 text-white font-bold py-4 px-4 rounded-lg text-center interactive-element uppercase tracking-wider">Agenda tu Cita</button>
-                 <div class="flex gap-4">
-                    <button onclick="downloadVCard()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-4 rounded-lg text-center interactive-element flex items-center justify-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>Guardar Contacto</button>
-                    <button @click="qrModal = true" class="w-1/3 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-4 rounded-lg text-center interactive-element flex items-center justify-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect></svg>QR</button>
+                <!-- Texto para instalar --><div id="install-btn" class="text-white opacity-80 mt-8 text-center cursor-pointer hover:opacity-100 transition underline">
+                    ¿Cómo instalar en mi dispositivo?
                 </div>
             </div>
-            
-            <!-- MODALS -->
+        </div>
+        
+        <!-- BANNER INFERIOR --><div class="footer-banner text-center py-4 px-4 font-semibold">
+            <p>Hecho con ♥ para una vida más sana</p>
+            <a href="mailto:sofia.rodriguez@email.com" class="block text-sm text-[#005f73] hover:underline mt-2 font-normal">sofia.rodriguez@email.com</a>
+        </div>
+    </div>
 
-            <!-- Modal del Código QR -->
-            <div x-show="qrModal" @keydown.escape.window="qrModal = false" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4" x-transition.opacity style="display: none;">
-                <div @click.away="qrModal = false" class="bg-slate-50 rounded-lg shadow-2xl text-center border-2 border-emerald-500 overflow-hidden" x-transition.scale>
-                    <div class="bg-emerald-600 text-white p-4">
-                        <h3 class="text-xl font-bold">Escanea para Compartir</h3>
-                    </div>
-                    <div class="p-6">
-                        <p class="text-gray-600 text-sm mb-4">
-                            ¿Quieres compartir mi contacto fácilmente? ¡Solo escanea este código con la cámara de tu teléfono! Es la forma más rápida de tener mis datos siempre a mano.
-                        </p>
-                        <img id="qrCodeImg" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://example.com" alt="QR Code" class="mx-auto">
-                        <div class="mt-6 flex justify-center">
-                            <button @click="qrModal = false" class="bg-emerald-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-emerald-700 transition-colors">Cerrar</button>
-                        </div>
-                    </div>
-                </div>
+    <!-- POPUP / MODAL DE SERVICIOS -->
+    <div id="services-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-header-title">Mis Servicios</h2>
+                <button class="modal-close-btn">&times;</button>
             </div>
-
-            <!-- Modal de Servicios -->
-            <div x-show="servicesModal" @keydown.escape.window="servicesModal = false" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4" x-transition.opacity style="display: none;">
-                 <div @click.away="servicesModal = false" class="bg-slate-50 rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] flex flex-col border-2 border-emerald-500 overflow-hidden" x-transition.scale>
-                    <div class="bg-emerald-600 text-white p-4 text-center">
-                        <h3 class="text-2xl font-bold">Nuestros Servicios</h3>
-                    </div>
-                    <div class="p-6 overflow-y-auto space-y-5 pr-2 flex-grow">
-                        <div class="flex items-start gap-4"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsCz7hCjrNHZpNmpNyZLUB7warOT52aUo05w&s" alt="Imagen del Servicio 1" class="w-24 h-24 rounded-lg object-cover shadow-md"><div><h4 class="font-bold text-lg text-emerald-700">Consulta Personalizada</h4><p class="text-gray-600 text-sm">Diseñamos un plan de alimentación exclusivo para ti, basado en tus objetivos, estilo de vida y necesidades biológicas para que alcances tu máximo potencial de bienestar.</p></div></div>
-                        <div class="flex items-start gap-4"><img src="https://ienutricion.com/wp-content/uploads/deportiva.jpg" alt="Imagen del Servicio 2" class="w-24 h-24 rounded-lg object-cover shadow-md"><div><h4 class="font-bold text-lg text-emerald-700">Nutrición Deportiva</h4><p class="text-gray-600 text-sm">Optimiza tu rendimiento y acelera tu recuperación con una estrategia nutricional que te dará la energía y los nutrientes que necesitas para superar cada reto.</p></div></div>
-                        <div class="flex items-start gap-4"><img src="https://s3.eu-central-1.amazonaws.com/patients-blog/Control_de_peso_de_forma_saludable_af836e133a.jpg" alt="Imagen del Servicio 3" class="w-24 h-24 rounded-lg object-cover shadow-md"><div><h4 class="font-bold text-lg text-emerald-700">Control de Peso Sostenible</h4><p class="text-gray-600 text-sm">Olvídate de las dietas restrictivas. Te enseñamos a construir una relación sana con la comida para lograr y mantener tu peso ideal de forma definitiva y saludable.</p></div></div>
-                        <div class="flex items-start gap-4"><img src="https://images.griddo.universitatcarlemany.com/en-que-consiste-la-nutricion-clinica-y-la-dietetica-hospitalaria" alt="Imagen del Servicio 4" class="w-24 h-24 rounded-lg object-cover shadow-md"><div><h4 class="font-bold text-lg text-emerald-700">Nutrición Clínica</h4><p class="text-gray-600 text-sm">Manejo nutricional para condiciones específicas como diabetes, hipertensión o problemas digestivos. Mejora tu calidad de vida a través de la alimentación.</p></div></div>
-                        <div class="flex items-start gap-4"><img src="https://esnecamedical.com/wp-content/uploads/Coaching-Nutricional.png" alt="Imagen del Servicio 5" class="w-24 h-24 rounded-lg object-cover shadow-md"><div><h4 class="font-bold text-lg text-emerald-700">Coaching de Hábitos</h4><p class="text-gray-600 text-sm">Te acompañamos en el proceso de transformar tus hábitos. Juntos, crearemos rutinas positivas y duraderas que se integren perfectamente en tu día a día.</p></div></div>
-                        <div class="flex items-start gap-4"><img src="https://www.ucr.ac.cr/medios/fotos/2016/taller-caribe0602956a81ac21dbc3.jpg" alt="Imagen del Servicio 6" class="w-24 h-24 rounded-lg object-cover shadow-md"><div><h4 class="font-bold text-lg text-emerald-700">Talleres Corporativos</h4><p class="text-gray-600 text-sm">Invierte en el bienestar de tu equipo. Ofrecemos charlas y talleres dinámicos sobre nutrición y hábitos saludables para potenciar la productividad y el ambiente laboral.</p></div></div>
-                        <div class="flex items-start gap-4"><img src="https://anaosta.com/assets/img/familia1.png" alt="Imagen del Servicio 7" class="w-24 h-24 rounded-lg object-cover shadow-md"><div><h4 class="font-bold text-lg text-emerald-700">Planes Familiares</h4><p class="text-gray-600 text-sm">Aprende a planificar comidas deliciosas y nutritivas para todos en casa. Fomentamos hábitos saludables desde la infancia para un futuro lleno de energía.</p></div></div>
-                    </div>
-                    <div class="p-6 pt-0 flex justify-center">
-                        <button @click="servicesModal = false" class="mt-6 bg-emerald-600 text-white font-bold py-2 px-6 rounded-lg w-full sm:w-auto hover:bg-emerald-700 transition-colors">Cerrar</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Modal de Horario de Atención -->
-            <div x-show="scheduleModal" @keydown.escape.window="scheduleModal = false" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4" x-transition.opacity style="display: none;">
-                <div @click.away="scheduleModal = false" class="bg-slate-50 rounded-2xl shadow-2xl w-full max-w-sm text-center border-2 border-emerald-500 overflow-hidden" x-transition.scale>
-                    <div class="bg-emerald-600 text-white p-4">
-                        <h3 class="text-2xl font-bold flex items-center justify-center gap-2"><i class="fa-solid fa-clock"></i> Horario de Atención</h3>
-                    </div>
-                    <div class="p-6">
-                        <div class="space-y-3 text-gray-700">
-                            <div class="flex justify-between items-center border-b border-gray-100 py-2"><span class="font-semibold">Lunes a Viernes</span><span>9:00 AM - 6:00 PM</span></div>
-                            <div class="flex justify-between items-center border-b border-gray-100 py-2"><span class="font-semibold">Sábados</span><span>9:00 AM - 1:00 PM</span></div>
-                            <div class="flex justify-between items-center py-2"><span class="font-semibold">Domingos</span><span class="text-red-500 font-medium">Cerrado</span></div>
-                        </div>
-                        <div class="mt-6 flex justify-center">
-                            <button @click="scheduleModal = false" class="bg-emerald-600 text-white font-bold py-2 px-6 rounded-lg w-full sm:w-auto hover:bg-emerald-700 transition-colors">Cerrar</button>
+            <div class="modal-body">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-left">
+                    <!-- Servicio 1 -->
+                    <div class="flex items-start space-x-4">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsCz7hCjrNHZpNmpNyZLUB7warOT52aUo05w&s" alt="Imagen de Plan Nutricional" class="w-20 h-20 rounded-lg object-cover flex-shrink-0">
+                        <div>
+                            <h3 class="font-semibold text-gray-800">Plan Personalizado</h3>
+                            <p class="text-sm text-gray-500 mt-1">Diseñamos un plan único para ti, basado en tus metas y estilo de vida.</p>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <!-- Modal de Instalación -->
-            <div x-show="installModal" @keydown.escape.window="installModal = false" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4" x-transition.opacity style="display: none;">
-                <div @click.away="installModal = false" class="bg-slate-50 rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] flex flex-col border-2 border-emerald-500 overflow-hidden" x-transition.scale>
-                    <div class="bg-emerald-600 text-white p-6 text-center">
-                        <h3 class="text-2xl font-bold flex items-center justify-center gap-2"><i class="fa-solid fa-download"></i> Instala en tu Dispositivo</h3>
-                        <p class="text-emerald-100 text-sm mt-1">Accede a mi tarjeta con un solo toque, como si fuera una app. ¡Es rápido, fácil y no ocupa espacio!</p>
-                    </div>
-                    <div class="p-6 overflow-y-auto space-y-5 pr-2 flex-grow">
-                        <div class="p-4 bg-white rounded-lg"><h4 class="font-bold text-lg text-gray-800 flex items-center gap-2 mb-2"><i class="fa-brands fa-apple"></i> Para iPhone (iOS)</h4><ol class="list-decimal list-inside text-gray-600 space-y-1 text-sm"><li>Abre esta tarjeta en el navegador <strong>Safari</strong>.</li><li>Toca el ícono de <strong>Compartir</strong> (un cuadro con una flecha hacia arriba).</li><li>Busca y selecciona la opción <strong>"Agregar a la pantalla de inicio"</strong>.</li><li>Confirma el nombre y ¡listo!</li></ol></div>
-                        <div class="p-4 bg-white rounded-lg"><h4 class="font-bold text-lg text-gray-800 flex items-center gap-2 mb-2"><i class="fa-brands fa-android"></i> Para Android</h4><ol class="list-decimal list-inside text-gray-600 space-y-1 text-sm"><li>Abre esta tarjeta en el navegador <strong>Chrome</strong>.</li><li>Toca el menú de los <strong>tres puntos</strong> (&#8942;) en la esquina superior derecha.</li><li>Busca y selecciona <strong>"Instalar aplicación"</strong> o <strong>"Agregar a pantalla principal"</strong>.</li><li>Sigue los pasos y ¡listo!</li></ol></div>
-                    </div>
-                    <div class="p-6 pt-0 flex justify-center">
-                        <button @click="installModal = false" class="bg-emerald-600 text-white font-bold py-2 px-6 rounded-lg w-full sm:w-auto hover:bg-emerald-700 transition-colors">Entendido</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Modal de Calendario para Citas -->
-            <div x-show="calendarModal" @keydown.escape.window="calendarModal = false" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4" x-transition.opacity style="display: none;">
-                <div @click.away="calendarModal = false" class="bg-slate-50 rounded-2xl shadow-2xl w-full max-w-md max-h-[95vh] flex flex-col border-2 border-emerald-500 overflow-hidden" x-transition.scale>
-                    <div class="bg-emerald-600 text-white p-4 text-center">
-                        <h3 class="text-xl sm:text-2xl font-bold flex items-center justify-center gap-2"><i class="fa-solid fa-calendar-check"></i> Selecciona el Día</h3>
-                        <p class="text-emerald-100 text-sm mt-1">Elige una fecha para ver los horarios</p>
-                    </div>
-                    <div class="p-4 sm:p-6">
-                        <div class="flex items-center justify-between mb-4">
-                            <button @click="previousMonth()" class="p-2 rounded-full hover:bg-gray-100"><i class="fa-solid fa-chevron-left"></i></button>
-                            <h4 class="font-semibold text-lg" x-text="`${monthNames[currentMonth]} ${currentYear}`"></h4>
-                            <button @click="nextMonth()" class="p-2 rounded-full hover:bg-gray-100"><i class="fa-solid fa-chevron-right"></i></button>
-                        </div>
-                        <div class="grid grid-cols-7 gap-1 text-center text-xs sm:text-sm text-gray-500 mb-2">
-                            <template x-for="day in dayNames" :key="day"><div x-text="day"></div></template>
-                        </div>
-                        <div class="grid grid-cols-7 gap-1">
-                            <template x-for="day in calendarDays" :key="day.id">
-                                <div class="text-center text-sm py-1.5 sm:py-2">
-                                    <button x-show="day.date" @click="selectDate(day)" 
-                                            :class="{
-                                                'bg-emerald-600 text-white': day.isSelected,
-                                                'text-gray-800 hover:bg-gray-100': !day.isSelected && !day.isPast && !day.isSunday,
-                                                'text-gray-400 cursor-not-allowed': day.isPast || day.isSunday,
-                                                'ring-2 ring-emerald-500': day.isToday && !day.isSelected
-                                            }" 
-                                            class="w-8 h-8 sm:w-9 sm:h-9 rounded-full transition-colors" 
-                                            :disabled="day.isPast || day.isSunday">
-                                        <span x-text="day.date"></span>
-                                    </button>
-                                </div>
-                            </template>
-                        </div>
-                        <div class="mt-4 flex flex-col sm:flex-row gap-2">
-                            <button @click="calendarModal = false" class="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-4 rounded-lg transition-colors">Cancelar</button>
+                    <!-- Servicio 2 -->
+                    <div class="flex items-start space-x-4">
+                        <img src="https://ienutricion.com/wp-content/uploads/deportiva.jpg" alt="Imagen de Nutrición Deportiva" class="w-20 h-20 rounded-lg object-cover flex-shrink-0">
+                        <div>
+                            <h3 class="font-semibold text-gray-800">Nutrición Deportiva</h3>
+                            <p class="text-sm text-gray-500 mt-1">Potencia tu rendimiento y acelera tu recuperación con una estrategia nutricional.</p>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <!-- Modal de Selección de Hora -->
-            <div x-show="timePickerModal" @keydown.escape.window="timePickerModal = false" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-[51] p-4" x-transition.opacity style="display: none;">
-                <div @click.away="timePickerModal = false" class="bg-slate-50 rounded-2xl shadow-2xl w-full max-w-sm max-h-[90vh] flex flex-col border-2 border-emerald-500 overflow-hidden" x-transition.scale>
-                    <div class="bg-emerald-600 text-white p-6 text-center">
-                        <h3 class="text-xl font-bold">Selecciona una Hora</h3>
-                        <p class="text-emerald-100 text-sm" x-text="`Para el ${selectedDate?.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' })}`"></p>
-                    </div>
-                    <div class="p-6 overflow-y-auto flex-grow">
-                        <div class="grid grid-cols-3 gap-3 text-center">
-                            <template x-if="availableTimes.length > 0">
-                                <template x-for="time in availableTimes" :key="time">
-                                    <button @click="selectedTime = time" :class="selectedTime === time ? 'bg-emerald-600 text-white shadow-lg' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'" class="py-3 px-2 rounded-lg text-sm font-medium transition-all duration-200 ease-in-out transform hover:scale-105">
-                                        <span x-text="time"></span>
-                                    </button>
-                                </template>
-                            </template>
-                            <template x-if="availableTimes.length === 0 && selectedDate">
-                                <p class="col-span-full text-gray-500 text-sm py-4">No hay horas disponibles para este día.</p>
-                            </template>
+                    <!-- Servicio 3 -->
+                    <div class="flex items-start space-x-4">
+                        <img src="https://s3.eu-central-1.amazonaws.com/patients-blog/Control_de_peso_de_forma_saludable_af836e133a.jpg" alt="Imagen de Control de Peso" class="w-20 h-20 rounded-lg object-cover flex-shrink-0">
+                        <div>
+                            <h3 class="font-semibold text-gray-800">Control de Peso</h3>
+                            <p class="text-sm text-gray-500 mt-1">Te guío en un proceso sostenible y saludable para ganar salud.</p>
                         </div>
                     </div>
-                     <div class="p-6 pt-0 flex flex-col sm:flex-row gap-2">
-                        <button @click="timePickerModal = false" class="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg transition-colors">Volver</button>
-                        <button @click="confirmAppointment()" :disabled="!selectedTime" :class="!selectedTime ? 'bg-emerald-300 cursor-not-allowed' : 'bg-emerald-600 hover:bg-emerald-700'" class="w-full text-white font-bold py-2 px-4 rounded-lg transition-colors">Confirmar Cita</button>
+                    <!-- Servicio 4 -->
+                    <div class="flex items-start space-x-4">
+                        <img src="https://images.griddo.universitatcarlemany.com/en-que-consiste-la-nutricion-clinica-y-la-dietetica-hospitalaria" alt="Imagen de Nutrición Clínica" class="w-20 h-20 rounded-lg object-cover flex-shrink-0">
+                        <div>
+                            <h3 class="font-semibold text-gray-800">Nutrición Clínica</h3>
+                            <p class="text-sm text-gray-500 mt-1">Manejo nutricional para condiciones específicas y mejora tu calidad de vida.</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- POPUP / MODAL DE HORARIO -->
+    <div id="horario-modal" class="modal-overlay">
+        <div class="modal-content">
+             <div class="modal-header">
+                <h2 class="modal-header-title">Horario de Atención</h2>
+                <button class="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="space-y-4 text-gray-700">
+                    <div class="flex justify-between items-center border-b border-gray-200 pb-3">
+                        <span class="font-semibold text-[#005f73] flex items-center gap-3"><i class="far fa-calendar-alt w-5 text-center"></i>Lunes a Viernes</span>
+                        <span class="font-mono bg-gray-100 px-2 py-1 rounded">09:00 - 18:00</span>
+                    </div>
+                    <div class="flex justify-between items-center border-b border-gray-200 pb-3">
+                        <span class="font-semibold text-[#005f73] flex items-center gap-3"><i class="far fa-calendar w-5 text-center"></i>Sábados</span>
+                        <span class="font-mono bg-gray-100 px-2 py-1 rounded">10:00 - 14:00</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="font-semibold text-red-500 flex items-center gap-3"><i class="far fa-calendar-times w-5 text-center"></i>Domingos</span>
+                        <span class="font-mono bg-red-50 text-red-500 px-2 py-1 rounded">Cerrado</span>
+                    </div>
+                </div>
+                <p class="text-center text-xs text-gray-400 mt-6">Las citas fuera de horario están sujetas a disponibilidad.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- POPUP / MODAL DE INSTALACIÓN -->
+    <div id="install-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-header-title">¡Lleva mi Tarjeta Contigo!</h2>
+                <button class="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                 <p class="text-center text-gray-600 mb-6">Accede a mi contacto rápidamente guardando esta tarjeta en la pantalla de inicio. ¡Es muy fácil!</p>
+                <div class="flex flex-col sm:flex-row gap-6">
+                    <div class="flex-1 p-4 bg-gray-50 rounded-lg border">
+                        <h3 class="text-lg font-semibold text-[#005f73] mb-3 flex items-center gap-2"><i class="fab fa-apple"></i> Para iOS (iPhone)</h3>
+                        <ol class="list-decimal list-inside text-gray-600 space-y-2 text-sm">
+                            <li>Toca el ícono de <strong>Compartir</strong> <i class="fas fa-share-square"></i> en Safari.</li>
+                            <li>Selecciona <strong>"Agregar a la pantalla de inicio"</strong>.</li>
+                            <li>¡Listo! El acceso directo aparecerá en tu móvil.</li>
+                        </ol>
+                    </div>
+                    <div class="flex-1 p-4 bg-gray-50 rounded-lg border">
+                        <h3 class="text-lg font-semibold text-[#005f73] mb-3 flex items-center gap-2"><i class="fab fa-android"></i> Para Android</h3>
+                        <ol class="list-decimal list-inside text-gray-600 space-y-2 text-sm">
+                            <li>Toca los <strong>tres puntos</strong> <i class="fas fa-ellipsis-v"></i> en Chrome.</li>
+                            <li>Selecciona <strong>"Agregar a la pantalla principal"</strong>.</li>
+                            <li>Confirma la acción y la tarjeta se añadirá.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- POPUP / MODAL DE CÓDIGO QR -->
+    <div id="qr-code-modal" class="modal-overlay">
+        <div class="modal-content">
+             <div class="modal-header">
+                <h2 class="modal-header-title">Escanea para Contactar</h2>
+                <button class="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body text-center">
+                <p class="text-gray-600 mb-4">¡Apunta la cámara de tu móvil aquí! Guarda mi contacto o comparte esta tarjeta de forma instantánea.</p>
+                <div class="flex justify-center p-2 bg-white rounded-lg border">
+                     <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=BEGIN:VCARD%0AVERSION:3.0%0AFN:Dra.%20Sof%C3%ADa%20Rodr%C3%ADguez%0ATEL;TYPE=WORK,VOICE:1234567890%0AEMAIL:sofia.rodriguez@email.com%0AEND:VCARD" alt="Código QR de Contacto" class="rounded-lg">
+                </div>
+                 <p class="text-xs text-gray-400 mt-4">Este código contiene mi información de contacto (vCard).</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- POPUP / MODAL DE AGENDAR CITA -->
+    <div id="agendar-modal" class="modal-overlay">
+        <div class="modal-content">
+            <!-- El contenido se genera dinámicamente -->
+        </div>
+    </div>
+
     <script>
-        function appData() {
-            return {
-                qrModal: false,
-                servicesModal: false,
-                scheduleModal: false,
-                installModal: false,
-                calendarModal: false,
-                timePickerModal: false,
+        // --- Lógica para el Modal de Servicios ---
+        const servicesBtn = document.getElementById('services-btn');
+        const servicesModal = document.getElementById('services-modal');
 
-                // Calendar properties
-                currentMonth: new Date().getMonth(),
-                currentYear: new Date().getFullYear(),
-                selectedDate: null,
-                selectedTime: null,
-                calendarDays: [],
-                monthNames: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
-                dayNames: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sá"],
+        if(servicesBtn && servicesModal) {
+            const openModal = () => servicesModal.classList.add('active');
+            const closeModal = () => servicesModal.classList.remove('active');
+            servicesBtn.addEventListener('click', openModal);
+            servicesModal.querySelector('.modal-close-btn').addEventListener('click', closeModal);
+            servicesModal.addEventListener('click', (event) => { if (event.target === servicesModal) closeModal(); });
+        }
+       
+        // --- Lógica para el Modal de Horario ---
+        const horarioBtn = document.getElementById('horario-btn');
+        const horarioModal = document.getElementById('horario-modal');
 
-                // Calendar init
-                init() {
-                    this.generateCalendarDays();
-                },
-
-                // Calendar methods
-                generateCalendarDays() {
-                    const firstDay = new Date(this.currentYear, this.currentMonth, 1).getDay();
-                    const daysInMonth = new Date(this.currentYear, this.currentMonth + 1, 0).getDate();
-                    const today = new Date();
-                    today.setHours(0, 0, 0, 0);
-
-                    let days = [];
-                    for (let i = 0; i < firstDay; i++) {
-                        days.push({ id: `empty-${i}` });
-                    }
-
-                    for (let i = 1; i <= daysInMonth; i++) {
-                        const date = new Date(this.currentYear, this.currentMonth, i);
-                        const isPast = date < today;
-                        const isToday = date.getTime() === today.getTime();
-                        const isSunday = date.getDay() === 0;
-                        
-                        days.push({
-                            id: `day-${i}`,
-                            date: i,
-                            isToday,
-                            isPast,
-                            isSunday,
-                            isSelected: this.selectedDate && this.selectedDate.getTime() === date.getTime(),
-                        });
-                    }
-                    this.calendarDays = days;
-                },
-                
-                selectDate(day) {
-                    if (day.isPast || day.isSunday) return;
-                    this.selectedDate = new Date(this.currentYear, this.currentMonth, day.date);
-                    this.selectedTime = null;
-                    this.generateCalendarDays(); // To update visual selection
-                    this.timePickerModal = true; // Open the new modal
-                },
-
-                previousMonth() {
-                    if (this.currentMonth === 0) {
-                        this.currentMonth = 11;
-                        this.currentYear--;
-                    } else {
-                        this.currentMonth--;
-                    }
-                    this.generateCalendarDays();
-                },
-
-                nextMonth() {
-                    if (this.currentMonth === 11) {
-                        this.currentMonth = 0;
-                        this.currentYear++;
-                    } else {
-                        this.currentMonth++;
-                    }
-                    this.generateCalendarDays();
-                },
-
-                confirmAppointment() {
-                    if (!this.selectedDate || !this.selectedTime) return;
-                    // In a real application, you would send the data to a server here.
-                    console.log(`Cita confirmada para el ${this.selectedDate.toLocaleDateString('es-ES')} a las ${this.selectedTime}.`);
-                    
-                    // Close all modals
-                    this.timePickerModal = false;
-                    this.calendarModal = false;
-
-                    // Reset state
-                    this.selectedDate = null;
-                    this.selectedTime = null;
-                    this.generateCalendarDays();
-                },
-                
-                // Calendar getter
-                get availableTimes() {
-                    if (!this.selectedDate) return [];
-                    
-                    const dayOfWeek = this.selectedDate.getDay();
-                    if (dayOfWeek === 0) return []; // Domingo
-
-                    let times = [];
-                    const startTime = 9;
-                    const endTime = (dayOfWeek === 6) ? 13 : 18; // Sábado hasta la 1pm, resto hasta las 6pm
-
-                    for (let hour = startTime; hour < endTime; hour++) {
-                        times.push(`${hour}:00`);
-                        times.push(`${hour}:30`);
-                    }
-                    return times;
-                }
-            }
+        if(horarioBtn && horarioModal){
+            const openHorarioModal = () => horarioModal.classList.add('active');
+            const closeHorarioModal = () => horarioModal.classList.remove('active');
+            horarioBtn.addEventListener('click', openHorarioModal);
+            horarioModal.querySelector('.modal-close-btn').addEventListener('click', closeHorarioModal);
+            horarioModal.addEventListener('click', (event) => { if (event.target === horarioModal) closeHorarioModal(); });
         }
 
-        function downloadVCard() {
-            const contact = {
-                name: 'Pérez', firstName: 'Ana', title: 'Nutricionista',
-                phone: '+1234567890', email: 'ana.perez@email.com', website: 'https://example.com'
+        // --- Lógica para el Modal de Instalación ---
+        const installBtn = document.getElementById('install-btn');
+        const installModal = document.getElementById('install-modal');
+
+        if(installBtn && installModal) {
+            const openInstallModal = () => installModal.classList.add('active');
+            const closeInstallModal = () => installModal.classList.remove('active');
+            installBtn.addEventListener('click', openInstallModal);
+            installModal.querySelector('.modal-close-btn').addEventListener('click', closeInstallModal);
+            installModal.addEventListener('click', (event) => { if (event.target === installModal) closeInstallModal(); });
+        }
+        
+        // --- Lógica para el Modal de Código QR ---
+        const qrCodeBtn = document.getElementById('qr-code-btn');
+        const qrCodeModal = document.getElementById('qr-code-modal');
+
+        if(qrCodeBtn && qrCodeModal){
+            const openQrCodeModal = () => qrCodeModal.classList.add('active');
+            const closeQrCodeModal = () => qrCodeModal.classList.remove('active');
+            qrCodeBtn.addEventListener('click', openQrCodeModal);
+            qrCodeModal.querySelector('.modal-close-btn').addEventListener('click', closeQrCodeModal);
+            qrCodeModal.addEventListener('click', (event) => { if (event.target === qrCodeModal) closeQrCodeModal(); });
+        }
+
+        // --- Lógica para Guardar Contacto ---
+        const saveContactBtn = document.getElementById('save-contact-btn');
+        if(saveContactBtn) {
+            const saveContact = () => {
+                const vCard = "BEGIN:VCARD\n" + "VERSION:3.0\n" + "FN:Dra. Sofía Rodríguez\n" + "TEL;TYPE=WORK,VOICE:1234567890\n" + "EMAIL:sofia.rodriguez@email.com\n" + "END:VCARD";
+                const blob = new Blob([vCard], { type: "text/vcard" });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = "DraSofiaRodriguez.vcf";
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
             };
-            const vCard = `BEGIN:VCARD\nVERSION:3.0\nN:${contact.name};${contact.firstName};;;\nFN:${contact.firstName} ${contact.name}\nTITLE:${contact.title}\nTEL;TYPE=WORK,VOICE:${contact.phone}\nEMAIL:${contact.email}\nURL:${contact.website}\nEND:VCARD`;
-            const blob = new Blob([vCard], { type: 'text/vcard;charset=utf-8' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.setAttribute('download', 'DraAnaPerez.vcf');
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            saveContactBtn.addEventListener('click', saveContact);
         }
 
-        document.addEventListener('DOMContentLoaded', (event) => {
-            const qrImg = document.getElementById('qrCodeImg');
-            if(qrImg) {
-                const currentUrl = window.location.href.startsWith('http') ? window.location.href : 'https://example.com/digital-card';
-                qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(currentUrl)}`;
+        // --- Lógica para el Modal de AGENDAR CITA ---
+        const agendarBtn = document.getElementById('agendar-btn');
+        const agendarModal = document.getElementById('agendar-modal');
+        
+        let currentDate = new Date();
+        let selectedDate = null;
+        let selectedTime = null;
+
+        const openAgendarModal = () => {
+            const modalContentEl = agendarModal.querySelector('.modal-content');
+            modalContentEl.innerHTML = `
+                <div class="modal-header">
+                    <h2 id="agendar-title" class="modal-header-title">Selecciona una Fecha</h2>
+                    <button class="modal-close-btn">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div id="calendar-view">
+                        <div class="flex items-center justify-between mb-4">
+                            <button id="prev-month-btn" class="text-gray-600 hover:text-[#005f73] text-2xl p-2 rounded-full leading-none">&larr;</button>
+                            <h3 id="month-year" class="text-lg font-semibold text-gray-700"></h3>
+                            <button id="next-month-btn" class="text-gray-600 hover:text-[#005f73] text-2xl p-2 rounded-full leading-none">&rarr;</button>
+                        </div>
+                        <div class="grid grid-cols-7 gap-2 text-center text-sm text-gray-400 font-bold mb-2">
+                            <div>Do</div><div>Lu</div><div>Ma</div><div>Mi</div><div>Ju</div><div>Vi</div><div>Sá</div>
+                        </div>
+                        <div id="calendar-days" class="grid grid-cols-7 gap-2 text-center"></div>
+                    </div>
+                    <div id="time-view" class="hidden">
+                        <button id="back-to-calendar-btn" class="text-sm text-[#005f73] hover:underline mb-4 font-semibold">&larr; Volver al calendario</button>
+                        <p id="selected-date-text" class="text-center text-gray-600 mb-4 font-semibold"></p>
+                        <div id="time-slots" class="grid grid-cols-3 sm:grid-cols-4 gap-3"></div>
+                        <button id="confirm-appointment-btn" class="w-full mt-6 py-3 bg-[#ee9b00] text-white font-bold rounded-lg hover:bg-amber-500 transition disabled:bg-gray-400 disabled:cursor-not-allowed" disabled>Confirmar Cita</button>
+                    </div>
+                </div>
+            `;
+            
+            // Re-bind elements
+            modalContentEl.querySelector('.modal-close-btn').addEventListener('click', closeAgendarModal);
+            document.getElementById('prev-month-btn').addEventListener('click', () => { currentDate.setMonth(currentDate.getMonth() - 1); renderCalendar(); });
+            document.getElementById('next-month-btn').addEventListener('click', () => { currentDate.setMonth(currentDate.getMonth() + 1); renderCalendar(); });
+            document.getElementById('back-to-calendar-btn').addEventListener('click', resetAppointmentView);
+            document.getElementById('confirm-appointment-btn').addEventListener('click', confirmAppointment);
+
+            agendarModal.classList.add('active');
+            resetAppointmentView();
+            renderCalendar();
+        };
+
+        const closeAgendarModal = () => agendarModal.classList.remove('active');
+
+        const renderCalendar = () => {
+            currentDate.setDate(1); // Evita problemas con meses de diferente longitud
+            const month = currentDate.getMonth();
+            const year = currentDate.getFullYear();
+            
+            document.getElementById('month-year').textContent = new Date(year, month).toLocaleString('es-ES', { month: 'long', year: 'numeric' }).replace(/^\w/, c => c.toUpperCase());
+            
+            const calendarDaysEl = document.getElementById('calendar-days');
+            calendarDaysEl.innerHTML = '';
+            
+            const firstDayOfMonth = currentDate.getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            
+            const today = new Date();
+            const todayTimestamp = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
+
+            for (let i = 0; i < firstDayOfMonth; i++) {
+                calendarDaysEl.insertAdjacentHTML('beforeend', '<div></div>');
             }
-        });
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayEl = document.createElement('div');
+                dayEl.textContent = day;
+                dayEl.classList.add('calendar-day', 'h-10', 'w-10', 'flex', 'items-center', 'justify-center', 'cursor-pointer', 'rounded-full');
+                
+                const dayDate = new Date(year, month, day);
+                const dayOfWeek = dayDate.getDay();
+
+                if (dayDate.getTime() < todayTimestamp || dayOfWeek === 0) { // Disable past days and Sundays
+                    dayEl.classList.add('disabled');
+                } else {
+                    dayEl.addEventListener('click', () => selectDate(dayDate));
+                }
+                
+                if (dayDate.toDateString() === today.toDateString()) {
+                    dayEl.classList.add('today');
+                }
+                
+                if (selectedDate && dayDate.toDateString() === selectedDate.toDateString()) {
+                    dayEl.classList.add('selected');
+                }
+
+                calendarDaysEl.appendChild(dayEl);
+            }
+        };
+
+        const selectDate = (date) => {
+            selectedDate = date;
+            renderCalendar();
+            showTimeView();
+        };
+
+        const showTimeView = () => {
+            document.getElementById('calendar-view').classList.add('hidden');
+            document.getElementById('time-view').classList.remove('hidden');
+            document.getElementById('agendar-title').textContent = 'Selecciona una Hora';
+            document.getElementById('selected-date-text').textContent = selectedDate.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            renderTimeSlots();
+        };
+
+        const renderTimeSlots = () => {
+            const timeSlotsContainerEl = document.getElementById('time-slots');
+            timeSlotsContainerEl.innerHTML = '';
+            selectedTime = null;
+            document.getElementById('confirm-appointment-btn').disabled = true;
+
+            let availableTimes = [];
+            const dayOfWeek = selectedDate.getDay();
+
+            if (dayOfWeek >= 1 && dayOfWeek <= 5) { // Lunes a Viernes
+                availableTimes = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'];
+            } else if (dayOfWeek === 6) { // Sábado
+                availableTimes = ['10:00', '11:00', '12:00', '13:00'];
+            }
+
+            if (availableTimes.length === 0) {
+                timeSlotsContainerEl.innerHTML = '<p class="col-span-full text-center text-gray-500">No hay horarios disponibles.</p>';
+                return;
+            }
+
+            availableTimes.forEach(time => {
+                const timeSlotEl = document.createElement('div');
+                timeSlotEl.textContent = time;
+                timeSlotEl.classList.add('time-slot', 'p-2', 'rounded-lg', 'text-center', 'cursor-pointer', 'font-mono');
+                timeSlotEl.addEventListener('click', () => {
+                    document.querySelectorAll('.time-slot').forEach(el => el.classList.remove('selected'));
+                    timeSlotEl.classList.add('selected');
+                    selectedTime = time;
+                    document.getElementById('confirm-appointment-btn').disabled = false;
+                });
+                timeSlotsContainerEl.appendChild(timeSlotEl);
+            });
+        };
+
+        const resetAppointmentView = () => {
+            document.getElementById('time-view').classList.add('hidden');
+            document.getElementById('calendar-view').classList.remove('hidden');
+            document.getElementById('agendar-title').textContent = 'Selecciona una Fecha';
+            selectedDate = null;
+            selectedTime = null;
+        };
+        
+        const confirmAppointment = () => {
+            const modalContent = agendarModal.querySelector('.modal-content');
+            modalContent.innerHTML = `
+                <div class="modal-body text-center p-8">
+                    <div class="text-7xl text-green-500 mb-4"><i class="fas fa-check-circle"></i></div>
+                    <h2 class="text-2xl font-bold text-[#005f73] mb-2">¡Cita Confirmada!</h2>
+                    <p class="text-gray-600">Tu cita está agendada para el</p>
+                    <p class="font-semibold text-gray-800 text-lg my-2 bg-gray-100 p-2 rounded-lg">${selectedDate.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' })} a las ${selectedTime}</p>
+                    <p class="text-sm text-gray-500 mt-4">Recibirás una confirmación por correo electrónico. ¡Nos vemos pronto!</p>
+                    <button id="final-close-btn" class="mt-6 w-full py-3 bg-[#005f73] text-white font-bold rounded-lg hover:bg-[#0a9396] transition">Cerrar</button>
+                </div>
+            `;
+            document.getElementById('final-close-btn').addEventListener('click', closeAgendarModal);
+        }
+        
+        if (agendarBtn && agendarModal) {
+            agendarBtn.addEventListener('click', openAgendarModal);
+            agendarModal.addEventListener('click', (event) => {
+                if (event.target === agendarModal) closeAgendarModal();
+            });
+        }
     </script>
 </body>
 </html>
