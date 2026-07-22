@@ -3,689 +3,430 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tarjeta de Presentación Digital - Dra. Sofía Rodríguez</title>
-    <!-- Carga de Tailwind CSS --><script src="https://cdn.tailwindcss.com"></script>
-    <!-- Carga de Google Fonts --><link rel="preconnect" href="https://fonts.googleapis.com">
+    <title>Tarjeta de Presentación Digital - Odontología</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Carga de Font Awesome para iconos --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Estilos personalizados --><style>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos personalizados y paleta de colores */
         body {
             font-family: 'Montserrat', sans-serif;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            background-color: #f0f4f8; /* Un gris azulado muy claro para el fondo */
+            background-color: #2d3748; /* gris oscuro para el fondo */
         }
-        /* Contenedor principal de la tarjeta */
+        .font-playfair {
+            font-family: 'Playfair Display', serif;
+        }
         .card-container {
-            width: 100%; /* Ocupa el ancho completo por defecto */
-            margin: 0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            background-color: #ffffff;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+            /* Los estilos responsivos ahora se manejan con clases de Tailwind */
         }
-
-        /* Media Query para pantallas más grandes (tablets, desktops) */
-        @media (min-width: 450px) {
-            .card-container {
-                max-width: 420px; /* Ancho máximo en pantallas grandes */
-                margin: 2rem auto; /* Centrado y con margen vertical */
-                min-height: calc(100vh - 4rem);
-                border-radius: 24px; /* Bordes redondeados */
-                overflow: hidden; /* Asegura que el contenido respete los bordes */
-            }
+        .mobile-scroll {
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior-y: contain; /* Mejora la experiencia de scroll */
         }
-
-        /* Imagen de fondo principal */
-        .main-bg {
-            background-image: url('https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
-            background-size: cover;
-            background-position: center;
-            height: 200px;
+        .banner-clip {
+            clip-path: ellipse(100% 60% at 50% 40%);
         }
-        /* Sección de contenido principal */
-        .content-section {
-            background: linear-gradient(180deg, #005f73 0%, #0a9396 100%);
-            margin-top: -60px;
-            border-top-left-radius: 50px;
-            border-top-right-radius: 50px;
-            position: relative;
-            padding-bottom: 2rem;
-            flex-grow: 1;
+        .icon-link {
+            background-color: rgba(255, 255, 255, 0.2);
+            /* backdrop-filter: blur(5px); */ /* Eliminado para mejorar rendimiento en scroll */
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease-in-out;
         }
-        /* Contenedor para la foto de perfil y el ícono de verificación */
-        .profile-container {
-            position: relative;
-            width: 150px;
-            height: 150px;
-            margin-top: -105px;
+        .icon-link:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-5px);
         }
-        /* Estilo de la foto de perfil */
-        .profile-pic {
+        /* Estilos para los popups (modales) */
+        .modal {
+            display: none; /* Oculto por defecto */
+            position: fixed;
+            z-index: 50;
+            left: 0;
+            top: 0;
             width: 100%;
             height: 100%;
-            border: 5px solid #0a9396;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            overflow: auto;
+            background-color: rgba(0,0,0,0.6);
+            backdrop-filter: blur(5px);
+            align-items: center;
+            justify-content: center;
         }
-        /* Ícono de verificación */
-        .verification-badge {
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            /* border: 1px solid #888; */
+            width: 90%;
+            max-width: 350px;
+            border-radius: 1.5rem;
+            text-align: center;
+            animation: fadeIn 0.3s;
+            position: relative;
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+        /* Estilos para el modal de servicios */
+        .services-modal-content {
+            background-color: #f9fafb; /* Un blanco un poco más suave */
+            max-width: 380px;
+            border-radius: 1.5rem;
+            padding: 0;
+            overflow: hidden;
+            text-align: left;
+            border: 2px solid #a0635f; /* Borde con color de la paleta */
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1); /* Sombra para profundidad */
+        }
+        @keyframes fadeIn {
+            from {opacity: 0; transform: scale(0.9);}
+            to {opacity: 1; transform: scale(1);}
+        }
+        .close-button {
+            color: #6b7280; /* Gris más oscuro */
             position: absolute;
-            top: 5px;
-            right: 5px;
-            background-color: #3b82f6; /* Azul de Tailwind */
-            color: white;
+            top: 10px;
+            right: 10px;
             width: 32px;
             height: 32px;
             border-radius: 9999px;
+            background-color: #e5e7eb; /* Fondo circular */
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 3px solid white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
-        }
-        /* Estilo general para los botones de acción principal */
-        .action-btn {
-            background-color: #ee9b00;
-            color: white;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            cursor: pointer;
-        }
-        .action-btn:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(238, 155, 0, 0.4);
-        }
-        /* Estilo para los botones de íconos sociales */
-        .social-btn {
-            background-color: rgba(255, 255, 255, 0.1);
-            color: white;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        .social-btn:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-            transform: scale(1.05);
-        }
-        /* Footer */
-        .footer-banner {
-            background-color: #e9d8a6;
-            color: #001219;
-        }
-
-        /* --- ESTILOS PROFESIONALES PARA POPUPS --- */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 37, 46, 0.7);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-            backdrop-filter: blur(5px);
-        }
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-        .modal-content {
-            background: #ffffff;
-            border-radius: 20px;
-            max-width: 90%;
-            width: 500px;
-            max-height: 90vh;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            transform: scale(0.95) translateY(20px);
-            transition: transform 0.3s ease, opacity 0.3s ease;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-            border: 5px solid #e9d8a6; /* Borde del popup aumentado */
-            opacity: 0;
-        }
-        .modal-overlay.active .modal-content {
-            transform: scale(1) translateY(0);
-            opacity: 1;
-        }
-        .modal-header {
-            padding: 1.25rem 1.5rem;
-            border-bottom: 1px solid #f0f4f8;
-            position: relative;
-        }
-        .modal-header-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            text-align: center;
-            color: #005f73;
-            max-width: calc(100% - 90px); /* Evita la superposición con el botón de cerrar */
-            margin: 0 auto; /* Centra el título con el nuevo max-width */
-        }
-        /* Franja decorativa para los títulos */
-        .modal-header-title::after {
-            content: '';
-            display: block;
-            width: 50px;
-            height: 4px;
-            background-color: #ee9b00;
-            margin: 8px auto 0;
-            border-radius: 2px;
-        }
-        .modal-body {
-            padding: 1.5rem;
-            overflow-y: auto;
-            flex-grow: 1;
-        }
-        .modal-close-btn {
-            position: absolute;
-            top: 0.75rem;
-            right: 0.75rem;
-            background: #f0f4f8;
-            color: #005f73;
-            border-radius: 99px;
-            width: 36px;
-            height: 36px;
-            cursor: pointer;
-            border: none;
-            font-size: 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-        .modal-close-btn:hover {
-            background-color: #e9d8a6;
-            transform: rotate(90deg);
-        }
-
-        /* Estilos para el Calendario */
-        .calendar-day { transition: all 0.2s ease-in-out; }
-        .calendar-day:not(.disabled):hover {
-            background-color: #e9d8a6;
-            color: #001219;
-            transform: scale(1.1);
-        }
-        .calendar-day.disabled {
-            color: #cbd5e1;
-            cursor: not-allowed;
-            background-color: transparent;
-        }
-        .calendar-day.today {
-            background-color: #ee9b00;
-            color: white;
+            font-size: 20px;
             font-weight: bold;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.2s ease-in-out;
         }
-        .calendar-day.selected {
-            background-color: #005f73;
-            color: white;
-            transform: scale(1.1);
-            box-shadow: 0 0 10px rgba(0,95,115,0.5);
+        .close-button:hover,
+        .close-button:focus {
+            background-color: #d1d5db; /* Fondo más oscuro al pasar el ratón */
+            color: black;
+            transform: rotate(90deg); /* Efecto de rotación */
         }
-        .time-slot { transition: all 0.2s ease-in-out; border: 2px solid #f0f4f8; }
-        .time-slot:hover {
-            border-color: #e9d8a6;
-            background-color: #f0f4f8;
-        }
-        .time-slot.selected {
-            background-color: #005f73;
-            color: white;
-            border-color: #005f73;
-            font-weight: 600;
+        .text-shadow {
+            text-shadow: 0 2px 4px rgba(0,0,0,0.4);
         }
     </style>
 </head>
-<body class="bg-gray-200">
+<body class="min-h-screen sm:flex sm:items-center sm:justify-center">
 
-    <div class="card-container">
-        <!-- SECCIÓN DE IMAGEN SUPERIOR --><div class="main-bg"></div>
-        
-        <!-- SECCIÓN DE CONTENIDO PRINCIPAL --><div class="content-section">
-            <div class="flex flex-col items-center px-6 text-center">
-                <!-- Contenedor de Foto de Perfil y Badge --><div class="profile-container">
-                    <img src="https://i.postimg.cc/dtDX1zV3/Captura-de-pantalla-2025-10-08-003802.png" alt="Foto de perfil de la Dra. Sofía Rodríguez" class="profile-pic object-cover rounded-full">
-                    <div class="verification-badge">
-                        <i class="fas fa-check text-sm"></i>
+    <!-- Contenedor principal de la tarjeta -->
+    <div class="card-container w-full h-screen sm:max-w-[400px] sm:h-[812px] sm:rounded-3xl sm:shadow-2xl mx-auto bg-gradient-to-b from-[#b27976] to-[#8c524e] overflow-hidden relative">
+        <div class="absolute top-0 left-0 w-full h-full overflow-y-auto mobile-scroll">
+            
+            <!-- Sección del banner superior -->
+            <div class="h-2/5 relative">
+                <img src="https://images.unsplash.com/photo-1588776218023-e02a5a9a445e?q=80&w=1974&auto=format&fit=crop" 
+                     alt="[Imagen de procedimiento dental]" 
+                     class="w-full h-full object-cover banner-clip"
+                     onerror="this.onerror=null;this.src='https://placehold.co/400x350/e7c6c4/a0635f?text=Clínica+Dental';">
+                
+                <div class="absolute top-8 left-0 right-0 text-center text-white text-shadow">
+                    <svg class="w-9 h-9 mx-auto text-white opacity-80" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M4 6 C2 9, 2 12, 4 14 L4 18 C4 22, 8 22, 8 18 L8 14 C10 16, 14 16, 16 14 L16 18 C16 22, 20 22, 20 18 L20 14 C22 12, 22 9, 20 6 C18 4, 15 4, 12 6 C9 4, 6 4, 4 6 Z" />
+                    </svg>
+                    <h1 class="font-playfair text-3xl mt-2 tracking-wider">AMANDA MÉNDEZ</h1>
+                    <p class="text-sm tracking-widest opacity-90">CIRUJANA DENTISTA - COP 1876</p>
+                </div>
+            </div>
+
+            <!-- Contenido principal -->
+            <div class="relative px-6 -mt-32 pb-6">
+                <div class="flex justify-center">
+                    <!-- Contenedor relativo para la insignia -->
+                    <div class="relative">
+                        <img src="https://i.postimg.cc/bvQvT0BW/Captura-de-pantalla-2025-10-07-133233.png" 
+                             alt="[Foto de la Dra. Amanda Méndez]" 
+                             class="w-28 h-28 rounded-full object-cover border-4 border-white shadow-lg"
+                             onerror="this.onerror=null;this.src='https://placehold.co/112x112/c78d8a/FFFFFF?text=Dra.';">
+                        <!-- Insignia de verificación -->
+                        <div class="absolute bottom-1 right-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7 text-blue-500 bg-white rounded-full p-0.5 border-2 border-white">
+                                <path fill-rule="evenodd" d="M8.603 3.799A4.49 4.49 0 0112 2.25c1.357 0 2.573.6 3.397 1.549a4.49 4.49 0 013.498 1.307 4.491 4.491 0 011.307 3.497A4.49 4.49 0 0121.75 12c0 1.357-.6 2.573-1.549 3.397a4.49 4.49 0 01-1.307 3.497 4.491 4.491 0 01-3.497 1.307A4.49 4.49 0 0112 21.75a4.49 4.49 0 01-3.397-1.549 4.49 4.49 0 01-3.498-1.306 4.491 4.491 0 01-1.307-3.498A4.49 4.49 0 012.25 12c0-1.357.6-2.573 1.549-3.397a4.49 4.49 0 011.307-3.497 4.491 4.491 0 013.497-1.307zm7.007 6.387a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
                     </div>
+                </div>
+
+                <div class="text-center mt-4 text-white text-shadow">
+                    <h2 class="text-2xl font-bold">Dra. Amanda Méndez</h2>
+                    <p class="mt-1 text-sm opacity-90">Odontopediatría • Ortodoncia<br>Estética Dental • Otros</p>
                 </div>
                 
-                <!-- Nombre y Profesión --><h1 class="text-3xl font-bold text-white mt-4 tracking-tight">Dra. Sofía Rodríguez</h1>
-                <p class="text-lg text-white opacity-80 mt-1">Nutricionista Profesional</p>
-                <p class="text-white opacity-90 mt-4 max-w-sm italic">Comprometida con tu bienestar a través de una alimentación consciente y saludable.</p>
-                
-                <!-- Botones Principales de Acción --><div class="flex flex-col sm:flex-row gap-4 w-full max-w-xs mx-auto mt-8">
-                    <div id="agendar-btn" class="action-btn flex-1 flex items-center justify-center gap-3 font-semibold py-3 rounded-full text-lg">
-                        <i class="fas fa-calendar-alt"></i>
-                        <span>Agendar</span>
-                    </div>
-                    <a href="tel:+1234567890" class="action-btn flex-1 flex items-center justify-center gap-3 font-semibold py-3 rounded-full text-lg">
-                        <i class="fas fa-phone-alt"></i>
-                        <span>Llamar</span>
+                <!-- Íconos interactivos -->
+                <div class="grid grid-cols-3 gap-4 mt-5 text-center text-white">
+                    <button id="servicesBtn" class="icon-link rounded-2xl p-3 flex flex-col items-center justify-center space-y-1">
+                        <svg class="w-7 h-7" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-1.125 0-2.062.938-2.062 2.063v7.5c0 1.125.937 2.063 2.063 2.063h7.5c1.125 0 2.063-.938 2.063-2.063v-7.5c0-1.125-.938-2.063-2.063-2.063H8.25z"></path></svg>
+                        <span class="text-xs font-medium">Servicios</span>
+                    </button>
+                    <a href="tel:+1234567890" class="icon-link rounded-2xl p-3 flex flex-col items-center justify-center space-y-1">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                        <span class="text-xs font-medium">Llamada</span>
+                    </a>
+                    <a href="https://wa.me/1234567890" target="_blank" class="icon-link rounded-2xl p-3 flex flex-col items-center justify-center space-y-1">
+                        <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.371-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.296-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.626.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+                        <span class="text-xs font-medium">WhatsApp</span>
+                    </a>
+                    <a href="https://facebook.com" target="_blank" class="icon-link rounded-2xl p-3 flex flex-col items-center justify-center space-y-1">
+                        <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"></path></svg>
+                        <span class="text-xs font-medium">Facebook</span>
+                    </a>
+                    <a href="https://instagram.com" target="_blank" class="icon-link rounded-2xl p-3 flex flex-col items-center justify-center space-y-1">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                        <span class="text-xs font-medium">Instagram</span>
+                    </a>
+                    <a href="https://www.google.com/maps/search/?api=1&query=Miami+FL" target="_blank" class="icon-link rounded-2xl p-3 flex flex-col items-center justify-center space-y-1">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        <span class="text-xs font-medium">Ubicación</span>
+                    </a>
+                     <!-- NUEVOS BOTONES -->
+                    <a id="saveContact" href="#" class="icon-link rounded-2xl p-3 flex flex-col items-center justify-center space-y-1">
+                        <svg class="w-7 h-7" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.5 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" /></svg>
+                        <span class="text-xs font-medium">Guardar</span>
+                    </a>
+                    <button id="shareBtn" class="icon-link rounded-2xl p-3 flex flex-col items-center justify-center space-y-1">
+                        <svg class="w-7 h-7" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 4.875c0-1.036.84-1.875 1.875-1.875h4.5c1.036 0 1.875.84 1.875 1.875v4.5c0 1.036-.84 1.875-1.875 1.875h-4.5A1.875 1.875 0 013.75 9.375v-4.5zM3.75 14.625c0-1.036.84-1.875 1.875-1.875h4.5c1.036 0 1.875.84 1.875 1.875v4.5c0 1.036-.84 1.875-1.875 1.875h-4.5a1.875 1.875 0 01-1.875-1.875v-4.5zM13.5 4.875c0-1.036.84-1.875 1.875-1.875h4.5c1.036 0 1.875.84 1.875 1.875v4.5c0 1.036-.84 1.875-1.875 1.875h-4.5A1.875 1.875 0 0113.5 9.375v-4.5zM13.5 14.625c0-1.036.84-1.875 1.875-1.875h4.5c1.036 0 1.875.84 1.875 1.875v4.5c0 1.036-.84 1.875-1.875 1.875h-4.5a1.875 1.875 0 01-1.875-1.875v-4.5z" /></svg>
+                        <span class="text-xs font-medium">Código QR</span>
+                    </button>
+                    <a href="mailto:email@ejemplo.com" class="icon-link rounded-2xl p-3 flex flex-col items-center justify-center space-y-1">
+                        <svg class="w-7 h-7" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" /></svg>
+                        <span class="text-xs font-medium">Correo</span>
                     </a>
                 </div>
                 
-                <p class="text-white opacity-80 mt-8 text-center">Toca los íconos para interactuar</p>
-
-                <!-- Íconos de Contacto y Redes Sociales --><div class="grid grid-cols-4 gap-3 w-full max-w-sm mx-auto mt-4">
-                    <div id="services-btn" class="social-btn flex flex-col justify-center items-center py-3 w-full h-20 rounded-2xl">
-                        <i class="fas fa-concierge-bell text-2xl"></i>
-                        <span class="text-xs mt-2 font-medium">Servicios</span>
-                    </div>
-                    <div id="horario-btn" class="social-btn flex flex-col justify-center items-center py-3 w-full h-20 rounded-2xl">
-                        <i class="fas fa-clock text-2xl"></i>
-                        <span class="text-xs mt-2 font-medium">Horario de atención</span>
-                    </div>
-                    <div id="qr-code-btn" class="social-btn flex flex-col justify-center items-center py-3 w-full h-20 rounded-2xl">
-                        <i class="fas fa-qrcode text-2xl"></i>
-                        <span class="text-xs mt-2 font-medium">Código QR</span>
-                    </div>
-                    <a href="https://maps.google.com/?q=Quito" target="_blank" class="social-btn flex flex-col justify-center items-center py-3 w-full h-20 rounded-2xl">
-                        <i class="fas fa-map-marker-alt text-2xl"></i>
-                        <span class="text-xs mt-2 font-medium">Ubicación</span>
-                    </a>
-                    <a href="https://www.facebook.com/" target="_blank" class="social-btn flex flex-col justify-center items-center py-3 w-full h-20 rounded-2xl">
-                        <i class="fab fa-facebook-f text-2xl"></i>
-                        <span class="text-xs mt-2 font-medium">Facebook</span>
-                    </a>
-                    <a href="https://www.instagram.com/" target="_blank" class="social-btn flex flex-col justify-center items-center py-3 w-full h-20 rounded-2xl">
-                        <i class="fab fa-instagram text-2xl"></i>
-                        <span class="text-xs mt-2 font-medium">Instagram</span>
-                    </a>
-                    <a href="https://wa.me/1234567890" target="_blank" class="social-btn flex flex-col justify-center items-center py-3 w-full h-20 rounded-2xl">
-                        <i class="fab fa-whatsapp text-2xl"></i>
-                        <span class="text-xs mt-2 font-medium">WhatsApp</span>
-                    </a>
-                    <div id="save-contact-btn" class="social-btn flex flex-col justify-center items-center py-3 w-full h-20 rounded-2xl">
-                        <i class="fas fa-save text-2xl"></i>
-                        <span class="text-xs mt-2 font-medium">Guardar Contacto</span>
-                    </div>
+                <!-- Enlace de texto para instalar -->
+                <div class="mt-6 text-center">
+                    <button id="installTextBtn" class="text-white text-sm underline opacity-90 hover:opacity-100 transition-opacity">
+                        ¿Cómo instalar en mi móvil?
+                    </button>
                 </div>
 
-                <!-- Texto para instalar --><div id="install-btn" class="text-white opacity-80 mt-8 text-center cursor-pointer hover:opacity-100 transition underline">
-                    ¿Cómo instalar en mi dispositivo?
-                </div>
             </div>
-        </div>
-        
-        <!-- BANNER INFERIOR --><div class="footer-banner text-center py-4 px-4 font-semibold">
-            <p>Hecho con ♥ para una vida más sana</p>
-            <a href="mailto:sofia.rodriguez@email.com" class="block text-sm text-[#005f73] hover:underline mt-2 font-normal">sofia.rodriguez@email.com</a>
         </div>
     </div>
 
-    <!-- POPUP / MODAL DE SERVICIOS -->
-    <div id="services-modal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-header-title">Mis Servicios</h2>
-                <button class="modal-close-btn">&times;</button>
+    <!-- Modal para Compartir / QR -->
+    <div id="qrModal" class="modal">
+        <div class="modal-content p-0 overflow-hidden border-2 border-[#a0635f]">
+            <span class="close-button" id="closeQrModal">&times;</span>
+            <div class="p-6 bg-gradient-to-b from-[#f3e6e5] to-white">
+                <h3 class="text-2xl font-bold text-[#6a3f3c] text-center font-playfair px-10">Comparte esta Tarjeta</h3>
             </div>
-            <div class="modal-body">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-left">
-                    <!-- Servicio 1 -->
-                    <div class="flex items-start space-x-4">
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsCz7hCjrNHZpNmpNyZLUB7warOT52aUo05w&s" alt="Imagen de Plan Nutricional" class="w-20 h-20 rounded-lg object-cover flex-shrink-0">
-                        <div>
-                            <h3 class="font-semibold text-gray-800">Plan Personalizado</h3>
-                            <p class="text-sm text-gray-500 mt-1">Diseñamos un plan único para ti, basado en tus metas y estilo de vida.</p>
-                        </div>
-                    </div>
-                    <!-- Servicio 2 -->
-                    <div class="flex items-start space-x-4">
-                        <img src="https://ienutricion.com/wp-content/uploads/deportiva.jpg" alt="Imagen de Nutrición Deportiva" class="w-20 h-20 rounded-lg object-cover flex-shrink-0">
-                        <div>
-                            <h3 class="font-semibold text-gray-800">Nutrición Deportiva</h3>
-                            <p class="text-sm text-gray-500 mt-1">Potencia tu rendimiento y acelera tu recuperación con una estrategia nutricional.</p>
-                        </div>
-                    </div>
-                    <!-- Servicio 3 -->
-                    <div class="flex items-start space-x-4">
-                        <img src="https://s3.eu-central-1.amazonaws.com/patients-blog/Control_de_peso_de_forma_saludable_af836e133a.jpg" alt="Imagen de Control de Peso" class="w-20 h-20 rounded-lg object-cover flex-shrink-0">
-                        <div>
-                            <h3 class="font-semibold text-gray-800">Control de Peso</h3>
-                            <p class="text-sm text-gray-500 mt-1">Te guío en un proceso sostenible y saludable para ganar salud.</p>
-                        </div>
-                    </div>
-                    <!-- Servicio 4 -->
-                    <div class="flex items-start space-x-4">
-                        <img src="https://images.griddo.universitatcarlemany.com/en-que-consiste-la-nutricion-clinica-y-la-dietetica-hospitalaria" alt="Imagen de Nutrición Clínica" class="w-20 h-20 rounded-lg object-cover flex-shrink-0">
-                        <div>
-                            <h3 class="font-semibold text-gray-800">Nutrición Clínica</h3>
-                            <p class="text-sm text-gray-500 mt-1">Manejo nutricional para condiciones específicas y mejora tu calidad de vida.</p>
-                        </div>
-                    </div>
+            <div class="p-6 pt-4 text-center">
+                <img id="qrCode" src="" alt="[Código QR]" class="mx-auto mb-4 p-1 bg-white border-4 border-[#e7c6c4] rounded-xl shadow-md">
+                <p class="text-gray-600 text-sm">Escanea el código para abrir la tarjeta en otro dispositivo.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Instalar -->
+    <div id="installModal" class="modal">
+        <div class="modal-content p-0 overflow-hidden border-2 border-[#a0635f]">
+            <span class="close-button" id="closeInstallModal">&times;</span>
+            <div class="p-6 bg-gradient-to-b from-[#f3e6e5] to-white">
+                <h3 class="text-2xl font-bold text-[#6a3f3c] text-center font-playfair px-10">Acceso Directo en tu Móvil</h3>
+                <p class="text-center text-gray-600 mt-2 text-sm">¡Ten mis datos siempre a mano! Sigue estos simples pasos:</p>
+            </div>
+            <div class="p-6 text-left text-sm text-gray-700 space-y-6">
+                <div>
+                    <h4 class="font-bold text-base text-[#6a3f3c]">Para iPhone (Safari)</h4>
+                    <p class="mt-2 flex items-center">
+                        <span class="bg-[#e7c6c4] text-[#8c524e] font-bold rounded-full w-6 h-6 flex items-center justify-center mr-3 shrink-0">1</span>
+                        Toca el ícono de 
+                        <span class="font-semibold text-[#8c524e] inline-flex items-center ml-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>
+                            Compartir
+                        </span>.
+                    </p>
+                    <p class="mt-2 flex items-center">
+                         <span class="bg-[#e7c6c4] text-[#8c524e] font-bold rounded-full w-6 h-6 flex items-center justify-center mr-3 shrink-0">2</span>
+                        <span>Busca y selecciona <b class="font-semibold text-[#8c524e]">"Agregar a inicio"</b>.</span>
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-base text-[#6a3f3c]">Para Android (Chrome)</h4>
+                    <p class="mt-2 flex items-center">
+                         <span class="bg-[#e7c6c4] text-[#8c524e] font-bold rounded-full w-6 h-6 flex items-center justify-center mr-3 shrink-0">1</span>
+                        Toca el menú de 
+                         <span class="font-semibold text-[#8c524e] inline-flex items-center ml-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-1" viewBox="0 0 20 20" fill="currentColor"><path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"></path></svg>
+                            tres puntos
+                        </span>.
+                    </p>
+                    <p class="mt-2 flex items-center">
+                         <span class="bg-[#e7c6c4] text-[#8c524e] font-bold rounded-full w-6 h-6 flex items-center justify-center mr-3 shrink-0">2</span>
+                        <span>Elige <b class="font-semibold text-[#8c524e]">"Instalar aplicación"</b>.</span>
+                    </p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- POPUP / MODAL DE HORARIO -->
-    <div id="horario-modal" class="modal-overlay">
-        <div class="modal-content">
-             <div class="modal-header">
-                <h2 class="modal-header-title">Horario de Atención</h2>
-                <button class="modal-close-btn">&times;</button>
+    <!-- Modal de Servicios - Mini Landing Page -->
+    <div id="servicesModal" class="modal">
+        <div class="modal-content services-modal-content relative">
+            <span class="close-button" id="closeServicesModal">&times;</span>
+            <div class="p-6 bg-gradient-to-b from-[#f3e6e5] to-white">
+                 <h2 class="text-2xl font-bold text-[#6a3f3c] text-center font-playfair px-10">Nuestros Servicios</h2>
+                 <p class="text-center text-gray-600 mt-2 text-sm">Cuidado experto para la sonrisa que siempre has deseado.</p>
             </div>
-            <div class="modal-body">
-                <div class="space-y-4 text-gray-700">
-                    <div class="flex justify-between items-center border-b border-gray-200 pb-3">
-                        <span class="font-semibold text-[#005f73] flex items-center gap-3"><i class="far fa-calendar-alt w-5 text-center"></i>Lunes a Viernes</span>
-                        <span class="font-mono bg-gray-100 px-2 py-1 rounded">09:00 - 18:00</span>
+            
+            <div class="p-6 h-96 overflow-y-auto">
+                <div class="space-y-6">
+                    <!-- Servicio 1: Diseño de Sonrisa -->
+                    <div class="flex items-center space-x-4">
+                        <img src="https://gonzalezycasado.com/wp-content/uploads/2019/11/DSD_2-700x587.jpg" alt="[Primer plano de una sonrisa perfecta]" class="w-24 h-24 rounded-lg object-cover shadow-md" onerror="this.onerror=null;this.src='https://placehold.co/100x100/b27976/FFFFFF?text=Diseño';">
+                        <div>
+                            <h4 class="font-bold text-gray-800">Diseño de Sonrisa</h4>
+                            <p class="text-sm text-gray-600">Utilizamos la última tecnología para crear una sonrisa armoniosa y perfecta para tu rostro.</p>
+                        </div>
                     </div>
-                    <div class="flex justify-between items-center border-b border-gray-200 pb-3">
-                        <span class="font-semibold text-[#005f73] flex items-center gap-3"><i class="far fa-calendar w-5 text-center"></i>Sábados</span>
-                        <span class="font-mono bg-gray-100 px-2 py-1 rounded">10:00 - 14:00</span>
+
+                    <!-- Servicio 2: Blanqueamiento Dental -->
+                    <div class="flex items-center space-x-4">
+                        <img src="https://www.fuentedelangel.com/wp-content/uploads/2021/01/blanqueamiento-dental-huesca-fa.jpg" alt="[Mockup de blanqueamiento láser]" class="w-24 h-24 rounded-lg object-cover shadow-md" onerror="this.onerror=null;this.src='https://placehold.co/100x100/a0635f/FFFFFF?text=Láser';">
+                        <div>
+                            <h4 class="font-bold text-gray-800">Blanqueamiento Láser</h4>
+                            <p class="text-sm text-gray-600">Aclara varios tonos el color de tus dientes en una sola sesión. Resultados inmediatos y seguros.</p>
+                        </div>
                     </div>
-                    <div class="flex justify-between items-center">
-                        <span class="font-semibold text-red-500 flex items-center gap-3"><i class="far fa-calendar-times w-5 text-center"></i>Domingos</span>
-                        <span class="font-mono bg-red-50 text-red-500 px-2 py-1 rounded">Cerrado</span>
+
+                    <!-- Servicio 3: Ortodoncia Invisible -->
+                    <div class="flex items-center space-x-4">
+                        <img src="https://gsdentaltalavera.com/wp-content/uploads/2024/03/ortodoncia-invisible.jpg" alt="[Mockup de ortodoncia invisible]" class="w-24 h-24 rounded-lg object-cover shadow-md" onerror="this.onerror=null;this.src='https://placehold.co/100x100/8c524e/FFFFFF?text=Invisible';">
+                        <div>
+                            <h4 class="font-bold text-gray-800">Ortodoncia Invisible</h4>
+                            <p class="text-sm text-gray-600">Alinea tus dientes de forma discreta y cómoda, sin que nadie lo note.</p>
+                        </div>
+                    </div>
+                     <!-- Servicio 4: Implantes Dentales -->
+                    <div class="flex items-center space-x-4">
+                        <img src="https://www.dentalbejarano.es/wp-content/uploads/implante-dental.jpg" alt="[Mockup de implante dental]" class="w-24 h-24 rounded-lg object-cover shadow-md" onerror="this.onerror=null;this.src='https://placehold.co/100x100/6a3f3c/FFFFFF?text=Implante';">
+                        <div>
+                            <h4 class="font-bold text-gray-800">Implantes Dentales</h4>
+                            <p class="text-sm text-gray-600">Recupera la función y estética de una pieza perdida con soluciones permanentes y naturales.</p>
+                        </div>
+                    </div>
+                    <!-- Servicio 5: Endodoncia -->
+                    <div class="flex items-center space-x-4">
+                        <img src="https://www.vitaldent.com/wp-content/uploads/2025/04/endodoncia-decorativa-que-es.webp" alt="[Radiografía dental]" class="w-24 h-24 rounded-lg object-cover shadow-md" onerror="this.onerror=null;this.src='https://placehold.co/100x100/5b5b5b/FFFFFF?text=Endo';">
+                        <div>
+                            <h4 class="font-bold text-gray-800">Endodoncia</h4>
+                            <p class="text-sm text-gray-600">Tratamiento para salvar dientes severamente dañados o infectados, eliminando el dolor.</p>
+                        </div>
+                    </div>
+
+                    <!-- Servicio 6: Periodoncia -->
+                    <div class="flex items-center space-x-4">
+                        <img src="https://veracruzodontologia.com.ar/wp-content/uploads/2025/01/Recurso-13logo-veterinaria-768x531.png" alt="[Cuidado de las encías]" class="w-24 h-24 rounded-lg object-cover shadow-md" onerror="this.onerror=null;this.src='https://placehold.co/100x100/f0a0a0/FFFFFF?text=Encías';">
+                        <div>
+                            <h4 class="font-bold text-gray-800">Periodoncia</h4>
+                            <p class="text-sm text-gray-600">Cuidamos la salud de tus encías, la base de una sonrisa sana y duradera.</p>
+                        </div>
+                    </div>
+
+                    <!-- Servicio 7: Odontopediatría -->
+                    <div class="flex items-center space-x-4">
+                        <img src="https://clinicasden.com/wp-content/uploads/2021/06/que-es-odontopediatria.jpg" alt="[Niño sonriente en el dentista]" class="w-24 h-24 rounded-lg object-cover shadow-md" onerror="this.onerror=null;this.src='https://placehold.co/100x100/87CEEB/FFFFFF?text=Niños';">
+                        <div>
+                            <h4 class="font-bold text-gray-800">Odontopediatría</h4>
+                            <p class="text-sm text-gray-600">Cuidado dental especializado y amigable para los más pequeños de la casa.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Servicio 8: Cirugía Oral -->
+                    <div class="flex items-center space-x-4">
+                        <img src="https://medicentro.com.ec/wp-content/uploads/2022/10/MEDICENTRO-ATENCION-INTEGRAL-DE-SALUD-cirugia-oral.jpg" alt="[Instrumentos de cirugía dental]" class="w-24 h-24 rounded-lg object-cover shadow-md" onerror="this.onerror=null;this.src='https://placehold.co/100x100/b0c4de/FFFFFF?text=Cirugía';">
+                        <div>
+                            <h4 class="font-bold text-gray-800">Cirugía Oral</h4>
+                            <p class="text-sm text-gray-600">Procedimientos seguros y precisos, desde extracciones hasta cirugías más complejas.</p>
+                        </div>
                     </div>
                 </div>
-                <p class="text-center text-xs text-gray-400 mt-6">Las citas fuera de horario están sujetas a disponibilidad.</p>
+            </div>
+            <div class="p-6 bg-gray-50 border-t">
+                <a href="https://wa.me/1234567890" target="_blank" class="block w-full text-center bg-[#8c524e] text-white font-bold py-3 rounded-lg hover:bg-[#7a4642] transition-colors">
+                    Agendar una Cita
+                </a>
             </div>
         </div>
     </div>
 
-    <!-- POPUP / MODAL DE INSTALACIÓN -->
-    <div id="install-modal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-header-title">¡Lleva mi Tarjeta Contigo!</h2>
-                <button class="modal-close-btn">&times;</button>
-            </div>
-            <div class="modal-body">
-                 <p class="text-center text-gray-600 mb-6">Accede a mi contacto rápidamente guardando esta tarjeta en la pantalla de inicio. ¡Es muy fácil!</p>
-                <div class="flex flex-col sm:flex-row gap-6">
-                    <div class="flex-1 p-4 bg-gray-50 rounded-lg border">
-                        <h3 class="text-lg font-semibold text-[#005f73] mb-3 flex items-center gap-2"><i class="fab fa-apple"></i> Para iOS (iPhone)</h3>
-                        <ol class="list-decimal list-inside text-gray-600 space-y-2 text-sm">
-                            <li>Toca el ícono de <strong>Compartir</strong> <i class="fas fa-share-square"></i> en Safari.</li>
-                            <li>Selecciona <strong>"Agregar a la pantalla de inicio"</strong>.</li>
-                            <li>¡Listo! El acceso directo aparecerá en tu móvil.</li>
-                        </ol>
-                    </div>
-                    <div class="flex-1 p-4 bg-gray-50 rounded-lg border">
-                        <h3 class="text-lg font-semibold text-[#005f73] mb-3 flex items-center gap-2"><i class="fab fa-android"></i> Para Android</h3>
-                        <ol class="list-decimal list-inside text-gray-600 space-y-2 text-sm">
-                            <li>Toca los <strong>tres puntos</strong> <i class="fas fa-ellipsis-v"></i> en Chrome.</li>
-                            <li>Selecciona <strong>"Agregar a la pantalla principal"</strong>.</li>
-                            <li>Confirma la acción y la tarjeta se añadirá.</li>
-                        </ol>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+<script>
+    // --- Lógica para guardar contacto (vCard) ---
+    const vCardData = `BEGIN:VCARD
+VERSION:3.0
+N:Méndez;Amanda;;Dra.;
+FN:Dra. Amanda Méndez
+ORG:Clínica Dental
+TITLE:Cirujana Dentista
+TEL;TYPE=WORK,VOICE:+1234567890
+TEL;TYPE=CELL,VOICE;PREF=1:https://wa.me/1234567890
+EMAIL:email@ejemplo.com
+URL:${window.location.href}
+END:VCARD`;
+    const saveContactLink = document.getElementById('saveContact');
+    saveContactLink.setAttribute('href', `data:text/vcard;charset=utf-8,${encodeURIComponent(vCardData)}`);
+    saveContactLink.setAttribute('download', 'DraAmandaMendez.vcf');
+
+
+    // --- Lógica para los modales (Popups) ---
+    const qrModal = document.getElementById('qrModal');
+    const installModal = document.getElementById('installModal');
+    const servicesModal = document.getElementById('servicesModal');
+
+    const shareBtn = document.getElementById('shareBtn');
+    const installTextBtn = document.getElementById('installTextBtn'); 
+    const servicesBtn = document.getElementById('servicesBtn');
+
+    const closeQrModal = document.getElementById('closeQrModal');
+    const closeInstallModal = document.getElementById('closeInstallModal');
+    const closeServicesModal = document.getElementById('closeServicesModal');
     
-    <!-- POPUP / MODAL DE CÓDIGO QR -->
-    <div id="qr-code-modal" class="modal-overlay">
-        <div class="modal-content">
-             <div class="modal-header">
-                <h2 class="modal-header-title">Escanea para Contactar</h2>
-                <button class="modal-close-btn">&times;</button>
-            </div>
-            <div class="modal-body text-center">
-                <p class="text-gray-600 mb-4">¡Apunta la cámara de tu móvil aquí! Guarda mi contacto o comparte esta tarjeta de forma instantánea.</p>
-                <div class="flex justify-center p-2 bg-white rounded-lg border">
-                     <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=BEGIN:VCARD%0AVERSION:3.0%0AFN:Dra.%20Sof%C3%ADa%20Rodr%C3%ADguez%0ATEL;TYPE=WORK,VOICE:1234567890%0AEMAIL:sofia.rodriguez@email.com%0AEND:VCARD" alt="Código QR de Contacto" class="rounded-lg">
-                </div>
-                 <p class="text-xs text-gray-400 mt-4">Este código contiene mi información de contacto (vCard).</p>
-            </div>
-        </div>
-    </div>
+    const qrCodeImg = document.getElementById('qrCode');
 
-    <!-- POPUP / MODAL DE AGENDAR CITA -->
-    <div id="agendar-modal" class="modal-overlay">
-        <div class="modal-content">
-            <!-- El contenido se genera dinámicamente -->
-        </div>
-    </div>
+    // Abrir modal de QR
+    shareBtn.onclick = function() {
+        const url = window.location.href;
+        qrCodeImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(url)}`;
+        qrModal.style.display = "flex";
+    }
 
-    <script>
-        // --- Lógica para el Modal de Servicios ---
-        const servicesBtn = document.getElementById('services-btn');
-        const servicesModal = document.getElementById('services-modal');
+    // Función para abrir el modal de instalación
+    const openInstallModal = () => {
+        installModal.style.display = "flex";
+    }
 
-        if(servicesBtn && servicesModal) {
-            const openModal = () => servicesModal.classList.add('active');
-            const closeModal = () => servicesModal.classList.remove('active');
-            servicesBtn.addEventListener('click', openModal);
-            servicesModal.querySelector('.modal-close-btn').addEventListener('click', closeModal);
-            servicesModal.addEventListener('click', (event) => { if (event.target === servicesModal) closeModal(); });
+    // Asignar evento a ambos botones de instalación
+    installTextBtn.onclick = openInstallModal;
+
+    // Abrir modal de Servicios
+    servicesBtn.onclick = () => {
+        servicesModal.style.display = "flex";
+    }
+
+
+    // Cerrar modales
+    closeQrModal.onclick = () => qrModal.style.display = "none";
+    closeInstallModal.onclick = () => installModal.style.display = "none";
+    closeServicesModal.onclick = () => servicesModal.style.display = "none";
+
+    // Cerrar al hacer clic fuera del contenido
+    window.onclick = function(event) {
+        if (event.target == qrModal) {
+            qrModal.style.display = "none";
         }
-       
-        // --- Lógica para el Modal de Horario ---
-        const horarioBtn = document.getElementById('horario-btn');
-        const horarioModal = document.getElementById('horario-modal');
-
-        if(horarioBtn && horarioModal){
-            const openHorarioModal = () => horarioModal.classList.add('active');
-            const closeHorarioModal = () => horarioModal.classList.remove('active');
-            horarioBtn.addEventListener('click', openHorarioModal);
-            horarioModal.querySelector('.modal-close-btn').addEventListener('click', closeHorarioModal);
-            horarioModal.addEventListener('click', (event) => { if (event.target === horarioModal) closeHorarioModal(); });
+        if (event.target == installModal) {
+            installModal.style.display = "none";
         }
-
-        // --- Lógica para el Modal de Instalación ---
-        const installBtn = document.getElementById('install-btn');
-        const installModal = document.getElementById('install-modal');
-
-        if(installBtn && installModal) {
-            const openInstallModal = () => installModal.classList.add('active');
-            const closeInstallModal = () => installModal.classList.remove('active');
-            installBtn.addEventListener('click', openInstallModal);
-            installModal.querySelector('.modal-close-btn').addEventListener('click', closeInstallModal);
-            installModal.addEventListener('click', (event) => { if (event.target === installModal) closeInstallModal(); });
+        if (event.target == servicesModal) {
+            servicesModal.style.display = "none";
         }
-        
-        // --- Lógica para el Modal de Código QR ---
-        const qrCodeBtn = document.getElementById('qr-code-btn');
-        const qrCodeModal = document.getElementById('qr-code-modal');
-
-        if(qrCodeBtn && qrCodeModal){
-            const openQrCodeModal = () => qrCodeModal.classList.add('active');
-            const closeQrCodeModal = () => qrCodeModal.classList.remove('active');
-            qrCodeBtn.addEventListener('click', openQrCodeModal);
-            qrCodeModal.querySelector('.modal-close-btn').addEventListener('click', closeQrCodeModal);
-            qrCodeModal.addEventListener('click', (event) => { if (event.target === qrCodeModal) closeQrCodeModal(); });
-        }
-
-        // --- Lógica para Guardar Contacto ---
-        const saveContactBtn = document.getElementById('save-contact-btn');
-        if(saveContactBtn) {
-            const saveContact = () => {
-                const vCard = "BEGIN:VCARD\n" + "VERSION:3.0\n" + "FN:Dra. Sofía Rodríguez\n" + "TEL;TYPE=WORK,VOICE:1234567890\n" + "EMAIL:sofia.rodriguez@email.com\n" + "END:VCARD";
-                const blob = new Blob([vCard], { type: "text/vcard" });
-                const url = URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = "DraSofiaRodriguez.vcf";
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            };
-            saveContactBtn.addEventListener('click', saveContact);
-        }
-
-        // --- Lógica para el Modal de AGENDAR CITA ---
-        const agendarBtn = document.getElementById('agendar-btn');
-        const agendarModal = document.getElementById('agendar-modal');
-        
-        let currentDate = new Date();
-        let selectedDate = null;
-        let selectedTime = null;
-
-        const openAgendarModal = () => {
-            const modalContentEl = agendarModal.querySelector('.modal-content');
-            modalContentEl.innerHTML = `
-                <div class="modal-header">
-                    <h2 id="agendar-title" class="modal-header-title">Selecciona una Fecha</h2>
-                    <button class="modal-close-btn">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <div id="calendar-view">
-                        <div class="flex items-center justify-between mb-4">
-                            <button id="prev-month-btn" class="text-gray-600 hover:text-[#005f73] text-2xl p-2 rounded-full leading-none">&larr;</button>
-                            <h3 id="month-year" class="text-lg font-semibold text-gray-700"></h3>
-                            <button id="next-month-btn" class="text-gray-600 hover:text-[#005f73] text-2xl p-2 rounded-full leading-none">&rarr;</button>
-                        </div>
-                        <div class="grid grid-cols-7 gap-2 text-center text-sm text-gray-400 font-bold mb-2">
-                            <div>Do</div><div>Lu</div><div>Ma</div><div>Mi</div><div>Ju</div><div>Vi</div><div>Sá</div>
-                        </div>
-                        <div id="calendar-days" class="grid grid-cols-7 gap-2 text-center"></div>
-                    </div>
-                    <div id="time-view" class="hidden">
-                        <button id="back-to-calendar-btn" class="text-sm text-[#005f73] hover:underline mb-4 font-semibold">&larr; Volver al calendario</button>
-                        <p id="selected-date-text" class="text-center text-gray-600 mb-4 font-semibold"></p>
-                        <div id="time-slots" class="grid grid-cols-3 sm:grid-cols-4 gap-3"></div>
-                        <button id="confirm-appointment-btn" class="w-full mt-6 py-3 bg-[#ee9b00] text-white font-bold rounded-lg hover:bg-amber-500 transition disabled:bg-gray-400 disabled:cursor-not-allowed" disabled>Confirmar Cita</button>
-                    </div>
-                </div>
-            `;
-            
-            // Re-bind elements
-            modalContentEl.querySelector('.modal-close-btn').addEventListener('click', closeAgendarModal);
-            document.getElementById('prev-month-btn').addEventListener('click', () => { currentDate.setMonth(currentDate.getMonth() - 1); renderCalendar(); });
-            document.getElementById('next-month-btn').addEventListener('click', () => { currentDate.setMonth(currentDate.getMonth() + 1); renderCalendar(); });
-            document.getElementById('back-to-calendar-btn').addEventListener('click', resetAppointmentView);
-            document.getElementById('confirm-appointment-btn').addEventListener('click', confirmAppointment);
-
-            agendarModal.classList.add('active');
-            resetAppointmentView();
-            renderCalendar();
-        };
-
-        const closeAgendarModal = () => agendarModal.classList.remove('active');
-
-        const renderCalendar = () => {
-            currentDate.setDate(1); // Evita problemas con meses de diferente longitud
-            const month = currentDate.getMonth();
-            const year = currentDate.getFullYear();
-            
-            document.getElementById('month-year').textContent = new Date(year, month).toLocaleString('es-ES', { month: 'long', year: 'numeric' }).replace(/^\w/, c => c.toUpperCase());
-            
-            const calendarDaysEl = document.getElementById('calendar-days');
-            calendarDaysEl.innerHTML = '';
-            
-            const firstDayOfMonth = currentDate.getDay();
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-            
-            const today = new Date();
-            const todayTimestamp = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
-
-            for (let i = 0; i < firstDayOfMonth; i++) {
-                calendarDaysEl.insertAdjacentHTML('beforeend', '<div></div>');
-            }
-
-            for (let day = 1; day <= daysInMonth; day++) {
-                const dayEl = document.createElement('div');
-                dayEl.textContent = day;
-                dayEl.classList.add('calendar-day', 'h-10', 'w-10', 'flex', 'items-center', 'justify-center', 'cursor-pointer', 'rounded-full');
-                
-                const dayDate = new Date(year, month, day);
-                const dayOfWeek = dayDate.getDay();
-
-                if (dayDate.getTime() < todayTimestamp || dayOfWeek === 0) { // Disable past days and Sundays
-                    dayEl.classList.add('disabled');
-                } else {
-                    dayEl.addEventListener('click', () => selectDate(dayDate));
-                }
-                
-                if (dayDate.toDateString() === today.toDateString()) {
-                    dayEl.classList.add('today');
-                }
-                
-                if (selectedDate && dayDate.toDateString() === selectedDate.toDateString()) {
-                    dayEl.classList.add('selected');
-                }
-
-                calendarDaysEl.appendChild(dayEl);
-            }
-        };
-
-        const selectDate = (date) => {
-            selectedDate = date;
-            renderCalendar();
-            showTimeView();
-        };
-
-        const showTimeView = () => {
-            document.getElementById('calendar-view').classList.add('hidden');
-            document.getElementById('time-view').classList.remove('hidden');
-            document.getElementById('agendar-title').textContent = 'Selecciona una Hora';
-            document.getElementById('selected-date-text').textContent = selectedDate.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-            renderTimeSlots();
-        };
-
-        const renderTimeSlots = () => {
-            const timeSlotsContainerEl = document.getElementById('time-slots');
-            timeSlotsContainerEl.innerHTML = '';
-            selectedTime = null;
-            document.getElementById('confirm-appointment-btn').disabled = true;
-
-            let availableTimes = [];
-            const dayOfWeek = selectedDate.getDay();
-
-            if (dayOfWeek >= 1 && dayOfWeek <= 5) { // Lunes a Viernes
-                availableTimes = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'];
-            } else if (dayOfWeek === 6) { // Sábado
-                availableTimes = ['10:00', '11:00', '12:00', '13:00'];
-            }
-
-            if (availableTimes.length === 0) {
-                timeSlotsContainerEl.innerHTML = '<p class="col-span-full text-center text-gray-500">No hay horarios disponibles.</p>';
-                return;
-            }
-
-            availableTimes.forEach(time => {
-                const timeSlotEl = document.createElement('div');
-                timeSlotEl.textContent = time;
-                timeSlotEl.classList.add('time-slot', 'p-2', 'rounded-lg', 'text-center', 'cursor-pointer', 'font-mono');
-                timeSlotEl.addEventListener('click', () => {
-                    document.querySelectorAll('.time-slot').forEach(el => el.classList.remove('selected'));
-                    timeSlotEl.classList.add('selected');
-                    selectedTime = time;
-                    document.getElementById('confirm-appointment-btn').disabled = false;
-                });
-                timeSlotsContainerEl.appendChild(timeSlotEl);
-            });
-        };
-
-        const resetAppointmentView = () => {
-            document.getElementById('time-view').classList.add('hidden');
-            document.getElementById('calendar-view').classList.remove('hidden');
-            document.getElementById('agendar-title').textContent = 'Selecciona una Fecha';
-            selectedDate = null;
-            selectedTime = null;
-        };
-        
-        const confirmAppointment = () => {
-            const modalContent = agendarModal.querySelector('.modal-content');
-            modalContent.innerHTML = `
-                <div class="modal-body text-center p-8">
-                    <div class="text-7xl text-green-500 mb-4"><i class="fas fa-check-circle"></i></div>
-                    <h2 class="text-2xl font-bold text-[#005f73] mb-2">¡Cita Confirmada!</h2>
-                    <p class="text-gray-600">Tu cita está agendada para el</p>
-                    <p class="font-semibold text-gray-800 text-lg my-2 bg-gray-100 p-2 rounded-lg">${selectedDate.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' })} a las ${selectedTime}</p>
-                    <p class="text-sm text-gray-500 mt-4">Recibirás una confirmación por correo electrónico. ¡Nos vemos pronto!</p>
-                    <button id="final-close-btn" class="mt-6 w-full py-3 bg-[#005f73] text-white font-bold rounded-lg hover:bg-[#0a9396] transition">Cerrar</button>
-                </div>
-            `;
-            document.getElementById('final-close-btn').addEventListener('click', closeAgendarModal);
-        }
-        
-        if (agendarBtn && agendarModal) {
-            agendarBtn.addEventListener('click', openAgendarModal);
-            agendarModal.addEventListener('click', (event) => {
-                if (event.target === agendarModal) closeAgendarModal();
-            });
-        }
-    </script>
+    }
+</script>
 </body>
 </html>
+
+
 
