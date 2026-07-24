@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aprendiendo &amp; Emprendiendo — ¿Cuál es tu camino?</title>
+<style>
+  :root{
+    --bg:#070706;
+    --card:#111111;
+    --card-hover:#161513;
+    --text:#F2F2F2;
+    --text-dim:#B6B6B6;
+    --gold:#DFA926;
+    --gold-light:#F6D358;
+    --gold-dark:#9C6D0A;
+    --cyan:#06B6C7;
+    --purple:#7C2CB8;
+    --green:#18C247;
+    --border:rgba(255,255,255,.08);
+    --radius:22px;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    overflow-x:hidden;
+  }
+  .topbar{
+    width:100%;
+    height:4px;
+    background:linear-gradient(90deg, var(--green), var(--cyan), var(--gold), var(--purple));
+    background-size:300% 100%;
+    animation:shift 6s linear infinite;
+  }
+  @keyframes shift{
+    0%{background-position:0% 0%;}
+    100%{background-position:100% 0%;}
+  }
+  .wrap{
+    width:100%;
+    max-width:520px;
+    padding:28px 20px 60px;
+    display:flex;
+    flex-direction:column;
+    flex:1;
+  }
+  .nav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:34px;
+  }
+  .back{
+    color:var(--text-dim);
+    font-size:15px;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    cursor:pointer;
+    user-select:none;
+    background:none;
+    border:none;
+    padding:0;
+  }
+  .back svg{width:16px;height:16px;}
+  .counter{
+    color:var(--text-dim);
+    font-size:14px;
+    letter-spacing:.03em;
+    font-variant-numeric:tabular-nums;
+  }
+  .stage{
+    display:none;
+    flex:1;
+    flex-direction:column;
+  }
+  .stage.active{display:flex;}
+  .eyebrow{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    color:var(--gold);
+    font-size:13px;
+    font-weight:700;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    margin-bottom:18px;
+  }
+  .eyebrow .dot{
+    width:8px;height:8px;border-radius:50%;
+    background:var(--gold);
+    box-shadow:0 0 10px var(--gold);
+  }
+  h1{
+    font-size:30px;
+    line-height:1.22;
+    font-weight:800;
+    margin:0 0 14px;
+    letter-spacing:-.01em;
+  }
+  h1 .accent{color:var(--gold-light);}
+  .sub{
+    color:var(--text-dim);
+    font-size:15.5px;
+    line-height:1.55;
+    margin:0 0 30px;
+  }
+  .pill{
+    color:var(--text-dim);
+    font-size:12.5px;
+    font-weight:600;
+    letter-spacing:.04em;
+    margin-bottom:14px;
+  }
+  .options{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+  }
+  .opt{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:22px 16px;
+    text-align:center;
+    cursor:pointer;
+    transition:transform .15s ease, border-color .15s ease, background .15s ease;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+  }
+  .opt:active{transform:scale(.97);}
+  .opt.selected{
+    border-color:var(--gold);
+    background:linear-gradient(180deg, rgba(223,169,38,.12), rgba(17,17,17,1));
+    box-shadow:0 0 0 1px var(--gold) inset, 0 8px 24px rgba(223,169,38,.15);
+  }
+  .opt .emoji{font-size:32px; line-height:1;}
+  .opt .title{font-weight:700; font-size:15.5px;}
+  .opt .desc{color:var(--text-dim); font-size:12.5px; line-height:1.4;}
+  .footer-nav{
+    margin-top:auto;
+    padding-top:34px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+  }
+  .progress-dots{
+    display:flex;
+    gap:6px;
+  }
+  .progress-dots span{
+    width:6px;height:6px;border-radius:50%;
+    background:var(--border);
+    transition:background .2s ease, width .2s ease;
+  }
+  .progress-dots span.done{background:var(--gold);}
+  .progress-dots span.now{background:var(--gold-light); width:18px; border-radius:4px;}
+  .btn-next{
+    background:var(--gold);
+    color:#070706;
+    border:none;
+    border-radius:14px;
+    padding:14px 26px;
+    font-size:15px;
+    font-weight:800;
+    cursor:pointer;
+    opacity:.35;
+    pointer-events:none;
+    transition:opacity .15s ease;
+  }
+  .btn-next.ready{opacity:1; pointer-events:auto;}
+  /* Result stage */
+  .result-badge{
+    width:64px;height:64px;border-radius:50%;
+    background:linear-gradient(135deg, var(--gold), var(--gold-dark));
+    display:flex;align-items:center;justify-content:center;
+    font-size:30px;
+    margin-bottom:22px;
+  }
+  .result-title{font-size:26px; font-weight:800; margin:0 0 10px; line-height:1.25;}
+  .result-sub{color:var(--text-dim); font-size:15px; line-height:1.55; margin:0 0 26px;}
+  .summary{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:18px 20px;
+    margin-bottom:26px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .summary .row{display:flex; gap:10px; font-size:13.5px; color:var(--text-dim);}
+  .summary .row b{color:var(--text); font-weight:600;}
+  .cta{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    background:linear-gradient(90deg, #1FBF52, #18C247);
+    color:#fff;
+    text-decoration:none;
+    font-weight:800;
+    font-size:16px;
+    padding:17px;
+    border-radius:16px;
+    box-shadow:0 10px 28px rgba(24,194,71,.25);
+  }
+  .cta svg{width:20px;height:20px;flex-shrink:0;}
+  .brand{
+    margin-top:auto;
+    padding-top:30px;
+    text-align:center;
+    color:var(--text-dim);
+    font-size:11.5px;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+  }
+  .brand b{color:var(--gold-light);}
+  @media (max-width:360px){
+    h1{font-size:26px;}
+    .opt .emoji{font-size:28px;}
+  }
+</style>
+</head>
+<body>
+<div class="topbar"></div>
+<div class="wrap">
+
+  <!-- STAGE 1 -->
+  <div class="stage active" data-stage="1">
+    <div class="nav">
+      <button class="back" style="visibility:hidden;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>Volver</button>
+      <span class="counter">1 / 3</span>
+    </div>
+    <div class="eyebrow"><span class="dot"></span>TUS INTERESES</div>
+    <h1>¿Qué te gustaría <span class="accent">lograr</span>?</h1>
+    <p class="sub">Elige la opción que más se acerca a lo que buscas hoy.</p>
+    <div class="pill">Pregunta 1 de 3</div>
+    <div class="options" data-q="1">
+      <div class="opt" data-value="curso" data-label="Aprender a crear Mini Apps">
+        <div class="emoji">🎓</div>
+        <div class="title">Aprender a crear Mini Apps</div>
+        <div class="desc">Quiero el curso y hacerlas yo mismo</div>
+      </div>
+      <div class="opt" data-value="miniapp" data-label="Una Mini App para mi negocio">
+        <div class="emoji">📲</div>
+        <div class="title">Una Mini App para mi negocio</div>
+        <div class="desc">Quiero que me la desarrollen ustedes</div>
+      </div>
+      <div class="opt" data-value="ambos" data-label="Ambas cosas">
+        <div class="emoji">✨</div>
+        <div class="title">Ambas cosas</div>
+        <div class="desc">Aprender y también tener la mía</div>
+      </div>
+    </div>
+    <div class="footer-nav">
+      <div class="progress-dots"><span class="now"></span><span></span><span></span></div>
+      <button class="btn-next" data-next="2">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- STAGE 2 -->
+  <div class="stage" data-stage="2">
+    <div class="nav">
+      <button class="back" data-back="1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>Volver</button>
+      <span class="counter">2 / 3</span>
+    </div>
+    <div class="eyebrow"><span class="dot"></span>TU SITUACIÓN</div>
+    <h1>¿Tienes un <span class="accent">negocio</span> hoy?</h1>
+    <p class="sub">Así te mostramos ejemplos que apliquen a tu caso.</p>
+    <div class="pill">Pregunta 2 de 3</div>
+    <div class="options" data-q="2">
+      <div class="opt" data-value="negocio_activo" data-label="Tengo negocio, quiero digitalizarlo">
+        <div class="emoji">🏪</div>
+        <div class="title">Tengo un negocio</div>
+        <div class="desc">Quiero digitalizarlo</div>
+      </div>
+      <div class="opt" data-value="revender" data-label="Quiero vender Mini Apps a otros">
+        <div class="emoji">📈</div>
+        <div class="title">Vender Mini Apps</div>
+        <div class="desc">Como servicio a otros negocios</div>
+      </div>
+    </div>
+    <div class="footer-nav">
+      <div class="progress-dots"><span class="done"></span><span class="now"></span><span></span></div>
+      <button class="btn-next" data-next="3">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- STAGE 3 -->
+  <div class="stage" data-stage="3">
+    <div class="nav">
+      <button class="back" data-back="2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>Volver</button>
+      <span class="counter">3 / 3</span>
+    </div>
+    <div class="eyebrow"><span class="dot"></span>ÚLTIMO PASO</div>
+    <h1>¿Qué tan <span class="accent">pronto</span> quieres empezar?</h1>
+    <p class="sub">Para saber cómo priorizar tu mensaje.</p>
+    <div class="pill">Pregunta 3 de 3</div>
+    <div class="options" data-q="3">
+      <div class="opt" data-value="ya" data-label="Ya mismo, estoy listo/a">
+        <div class="emoji">🔥</div>
+        <div class="title">Ya mismo</div>
+        <div class="desc">Estoy listo/a para empezar</div>
+      </div>
+      <div class="opt" data-value="semana" data-label="Esta semana">
+        <div class="emoji">🗓️</div>
+        <div class="title">Esta semana</div>
+        <div class="desc">Quiero moverme pronto</div>
+      </div>
+    </div>
+    <div class="footer-nav">
+      <div class="progress-dots"><span class="done"></span><span class="done"></span><span class="now"></span></div>
+      <button class="btn-next" data-next="result">Ver mi resultado →</button>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="stage" data-stage="result">
+    <div class="result-badge">🎯</div>
+    <h1 class="result-title">Gracias por compartir tu interés.</h1>
+    <p class="result-sub">Presiona el botón, <b style="color:var(--gold-light)">Enviar mensaje</b>, y seguimos la conversación con base en lo que nos contaste.</p>
+    <a class="cta" id="waBtn" href="#" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.36 5.07L2 22l5.09-1.33A9.94 9.94 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm5.2 14.2c-.24.68-1.4 1.3-1.94 1.36-.5.06-1.13.08-1.83-.12-.42-.12-.96-.3-1.65-.6-2.9-1.25-4.8-4.16-4.94-4.35-.14-.19-1.18-1.57-1.18-3 0-1.42.75-2.12 1.02-2.41.27-.29.58-.36.78-.36h.55c.18 0 .42-.02.64.5.24.56.8 1.94.87 2.08.07.14.11.3.02.49-.09.19-.14.3-.28.46-.14.16-.29.36-.42.48-.14.14-.28.29-.12.57.16.28.72 1.19 1.55 1.93 1.06.95 1.96 1.24 2.24 1.38.28.14.44.12.6-.07.16-.19.68-.79.86-1.06.18-.27.36-.23.6-.14.24.09 1.52.72 1.78.85.26.13.44.19.5.3.06.11.06.65-.18 1.33z"/></svg>
+      Enviar mensaje
+    </a>
+  </div>
+
+  <div class="brand">Aprendiendo <b>&amp;</b> Emprendiendo</div>
+</div>
+
+<script>
+  // ⚠️ Reemplaza este número por tu WhatsApp real (con indicativo de país, sin + ni espacios)
+  const WHATSAPP_NUMBER = "573116221756";
+
+  const answers = {};
+
+  document.querySelectorAll('.options').forEach(group => {
+    group.addEventListener('click', (e) => {
+      const opt = e.target.closest('.opt');
+      if (!opt) return;
+      const q = group.dataset.q;
+      group.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      answers[q] = { value: opt.dataset.value, label: opt.dataset.label };
+      const stage = group.closest('.stage');
+      stage.querySelector('.btn-next').classList.add('ready');
+    });
+  });
+
+  document.querySelectorAll('.back').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = btn.dataset.back;
+      if (!target) return;
+      goTo(target);
+    });
+  });
+
+  document.querySelectorAll('.btn-next').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (!btn.classList.contains('ready')) return;
+      const target = btn.dataset.next;
+      if (target === 'result') {
+        buildResult();
+      }
+      goTo(target);
+    });
+  });
+
+  function goTo(stageId){
+    document.querySelectorAll('.stage').forEach(s => s.classList.remove('active'));
+    document.querySelector('.stage[data-stage="' + stageId + '"]').classList.add('active');
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  // Frases en primera persona para cada valor posible de cada pregunta
+  const INTERES = {
+    curso:   'aprender a crear mis propias Mini Apps',
+    miniapp: 'que desarrollen una Mini App para mi negocio',
+    ambos:   'aprender y también tener mi propia Mini App'
+  };
+  const RAZON = {
+    negocio_activo: 'tengo un negocio y quiero digitalizarlo',
+    revender:       'quiero ofrecer este servicio a otros negocios'
+  };
+  const MOMENTO = {
+    ya:     'ya mismo',
+    semana: 'esta semana'
+  };
+
+  function buildResult(){
+    const interes  = INTERES[answers['1'] ? answers['1'].value : ''] || '—';
+    const razon    = RAZON[answers['2'] ? answers['2'].value : ''] || '—';
+    const momento  = MOMENTO[answers['3'] ? answers['3'].value : ''] || '—';
+
+    const msg = `Hola, estoy interesado en ${interes}, porque ${razon}, estoy dispuesto a iniciar ${momento}. Cuéntame cómo seguimos.`;
+
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
+    document.getElementById('waBtn').href = url;
+  }
+</script>
+</body>
+</html>
